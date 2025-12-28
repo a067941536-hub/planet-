@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="planetstyle.css">
+    <title>木星看光光:D</title>
+    <link rel="icon" type="image/png" href="jupiter.png">
+</head>
+<body>
+    
+    <header>
+        <h1>探索木星</h1>
+        <p><a href="index.html" class="back-link">← 返回星球選擇頁</a></p>
+        <p><a href="jdiagram.html" class="back-link">← 返回太陽系動態圖選擇頁</a></p>
+    </header>
+
+    <main>
+        <section class="planet-visual">
+            <a href="https://solarsystem.nasa.gov/gltf_embed/2375/" target="_blank">
+            <img src="images/jupiter.png" alt="{{PLANET_NAME}} 的影像">
+            </a>
+        </section>
+
+        <section class="planet-facts">
+            <h2>基本概覽</h2>
+            <table>
+                <tr>
+                    <th>類型</th>
+                    <td>類木行星</td>
+                 </tr>
+                <tr>
+                    <th>平均直徑</th>
+                    <td>約139,820km</td>
+                </tr>
+                <tr>
+                    <th>繞行恆星/星系</th>
+                    <td>繞行太陽/繞行銀河系中心 旋轉(約2.5億年一圈)</td>
+                </tr>
+                <tr>
+                    <th>發現年份</th>
+                    <td>
+                        <p>肉眼就能觀測到了，因次無確切的觀測時間(以下列望遠鏡的時間為主)</p>
+                        <p>伽利略在1610年首次用望遠鏡發現了它的四大衛星。</p>
+                        <p>中國古代天文學家甘德（公元前 362 年）可能已見其衛星(只是假說)</p>
+                    </td>
+                </tr>
+                 <tr>
+                    <th>距離</th>
+                    <td>約778000000000公尺(也就是約5.2天文單位)</td>
+                </tr>
+                <tr>
+                    <th>衛星</th>
+                    <td>已有95顆已確認的衛星</td>
+                </tr>
+                <tr>
+                    <th>自轉</th>
+                    <td>
+                        <p>9小時56分至9小時50分。</p>
+                        <p>它像流體一樣轉動，赤道地區轉得比兩極快。成因：行星在形成初期保留了角動量，質量越大、收縮越快，轉速就越快</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>公轉</th>
+                    <td>約4332.59天</td>
+                </tr>
+                <tr>
+                    <th>表面</th>
+                    <td>約90%的氫氣和10%的氦氣，與太陽成分相似。</td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="planet-description">
+            <h2>關於 {{PLANET_NAME}}</h2>
+            <p>{{DETAILED_DESCRIPTION}}</p>
+            
+            </section>
+    </main>
+
+    <footer>
+        <p>&copy; 宇宙探索資料中心</p>
+    </footer>
+    
+</body>
+</html>

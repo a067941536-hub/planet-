@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>太陽系全景互動動畫</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* --- 1. 基礎設定與星空背景 (Body) --- */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            /* 假設背景圖名稱是 universe.png */
+            background-image: url("universe.png"); 
+            background-color: #000;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: Arial, sans-serif;
+            /* 保持隱藏溢出，但太陽系本身會被縮放以適應螢幕 */
+            overflow: hidden; 
+        }
+
+        /* --- 2. 頁面標題 (H1) --- */
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 0 0 10px rgba(74, 144, 226, 0.7);
+        }
+
+        /* --- 3. 左上角返回按鈕 (#return-home) --- */
+        #return-home {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.7);
+            color: #4a90e2;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+        }
+
+        #return-home:hover {
+            background: rgba(74, 144, 226, 0.8);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* --- 4. 太陽系容器 (.solar-system) --- */
+        .solar-system {
+            position: relative;
+            width: 1000px;
+            height: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            /* 【響應式修正】移除 transform: translateY(-20px)，讓 JS 處理定位 */
+            /* 【響應式修正】設定縮放原點和透過 CSS 變量控制縮放比例 */
+            transform-origin: center center; 
+            transform: scale(var(--solar-scale, 1));
+        }
+
+        /* --- 5. 太陽 (.sun) --- */
+        .sun {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 50% 50%, #fffacd, #ffa500, #ff4500);
+            border-radius: 50%;
+            /* 初始光暈效果 */
+            box-shadow: 0 0 60px 20px rgba(255, 165, 0, 0.9), 0 0 100px 30px rgba(255, 69, 0, 0.6);
+            position: absolute;
+            z-index: 10;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s; /* 平滑過渡 */
+        }
+        
+        /* --- 6. 軌道 (.orbit) 與行星 (.planet) 通用樣式 --- */
+        .orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            transform: translate(-50%, -50%); /* 確保軌道居中 */
+        }
+
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+            transform: translate(-50%, -50%); /* 確保行星點居中 */
+            z-index: 15;
+        }
+        
+        /* 行星懸停放大效果 */
+        .planet:hover {
+            transform: translate(-50%, -50%) scale(2.5); 
+            box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.8);
+            z-index: 100;
+        }
+
+        /* --- 7. 個別行星/軌道尺寸與顏色 --- */
+        /* 水星 */
+        .mercury-orbit { width: 150px; height: 150px; }
+        .mercury { width: 10px; height: 10px; background-color: gray; }
+        /* 金星 */
+        .venus-orbit { width: 200px; height: 200px; }
+        .venus { width: 18px; height: 18px; background-color: gold; }
+        /* 地球 */
+        .earth-orbit { width: 250px; height: 250px; }
+        .earth { width: 20px; height: 20px; background-color: blue; }
+        /* 火星 */
+        .mars-orbit { width: 300px; height: 300px; }
+        .mars { width: 15px; height: 15px; background-color: red; }
+        /* 木星 */
+        .jupiter-orbit { width: 600px; height: 600px; }
+        .jupiter { width: 50px; height: 50px; background-color: #d1b67e; }
+        /* 土星 */
+        .saturn-orbit { width: 750px; height: 750px; }
+        .saturn { width: 45px; height: 45px; background-color: #ccac70; }
+        .saturn-ring { /* 土星環樣式 */
+            position: absolute; 
+            width: 70px; 
+            height: 10px;
+            background: rgba(204, 172, 112, 0.7); 
+            border-radius: 50%;
+            transform: translate(-50%, -50%) rotate(30deg);
+            top: 50%; 
+            left: 50%; 
+            z-index: -1; 
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+        /* 天王星 */
+        .uranus-orbit { width: 850px; height: 850px; }
+        .uranus { width: 35px; height: 35px; background-color: lightblue; }
+        /* 海王星 */
+        .neptune-orbit { width: 950px; height: 950px; }
+        .neptune { width: 32px; height: 32px; background-color: royalblue; }
+        
+        /* --- 8. 小行星帶 (.asteroid-belt) --- */
+        .asteroid-belt {
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: rotateBelt 60s linear infinite;
+            z-index: 5;
+            cursor: pointer;
+            box-shadow: 0 0 0 1px rgba(136, 136, 136, 0.5); /* 提示邊框 */
+        }
+        @keyframes rotateBelt {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        .asteroid-belt:hover {
+            box-shadow: 0 0 0 2px #FFF, 0 0 15px #FFF;
+        }
+
+        .asteroid { /* 小行星點 */
+            position: absolute; 
+            width: 2px; 
+            height: 2px; 
+            background-color: #888;
+            border-radius: 50%; 
+            box-shadow: 0 0 2px #fff;
+            pointer-events: none; /* 允許點擊下方的行星帶容器 */
+        }
+
+        /* --- 9. 詳細資訊面板 (#info-panel) --- */
+        #info-panel {
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #4a90e2; 
+            padding: 15px; 
+            border-radius: 8px;
+            max-width: 280px; 
+            display: none; /* 初始隱藏 */
+            z-index: 100; 
+            text-align: left;
+            box-shadow: 0 0 20px rgba(74, 144, 226, 0.5);
+        }
+        #info-panel h3 {
+            margin-top: 0; 
+            color: #4a90e2; 
+            font-size: 1.3em;
+            border-bottom: 1px solid rgba(74, 144, 226, 0.5); 
+            padding-bottom: 5px; 
+            margin-bottom: 10px;
+        }
+        #info-panel p { 
+            font-size: 0.95em; 
+            line-height: 1.6; 
+        }
+    </style>
+</head>
+<body>
+
+    <button id="return-home">
+        <i class="fas fa-home"></i> 返回原畫面
+    </button>
+    
+    <div class="solar-system">
+        
+        <div class="black-hole-bg"></div>
+
+        <div class="sun" id="sun"
+            data-name="太陽"
+            data-details="太陽系的中心恆星，提供了地球上的所有能量。"
+            data-url="planet_sun.html"></div>
+        
+        <div class="orbit mercury-orbit"></div>
+        <div class="orbit venus-orbit"></div>
+        <div class="orbit earth-orbit"></div>
+        <div class="orbit mars-orbit"></div>
+        <div class="orbit jupiter-orbit"></div>
+        <div class="orbit saturn-orbit"></div>
+        <div class="orbit uranus-orbit"></div>
+        <div class="orbit neptune-orbit"></div>
+
+        <div class="asteroid-belt" id="asteroid-belt"
+            data-name="小行星帶"
+            data-details="位於火星與木星軌道間，由數百萬顆小行星組成。"
+            data-url="planet_ asteroid.html">
+        </div>
+        
+        <div class="planet mercury" id="mercury"
+            data-name="水星" data-details="太陽系最小的行星，公轉週期最短。"
+            data-url="planet_merc.html"></div>
+            
+        <div class="planet venus" id="venus"
+            data-name="金星" data-details="地獄般的熱度，被厚厚的硫酸雲層覆蓋。"
+            data-url="planet_venus.html"></div>
+            
+        <div class="planet earth" id="earth"
+            data-name="地球" data-details="我們唯一的家園，已知唯一有生命存在的星球。"
+            data-url="planet_earth.html"></div>
+
+        <div class="planet mars" id="mars"
+            data-name="火星" data-details="紅色星球，被視為人類下一代殖民地。"
+            data-url="planet_mars.html"></div>
+        
+        <div class="planet jupiter" id="jupiter"
+            data-name="木星" data-details="太陽系最大的行星，有一個巨大的紅斑。"
+            data-url="planet_jupiter.html"></div>
+
+        <div class="planet saturn" id="saturn"
+            data-name="土星" data-details="以其壯麗的行星環而聞名，由冰和岩石組成。"
+            data-url="planet_saturn.html">
+            <div class="saturn-ring"></div>
+        </div>
+
+        <div class="planet uranus" id="uranus"
+            data-name="天王星" data-details="一顆冰巨星，以其獨特的傾斜自轉軸而聞名。"
+            data-url="planet_uranus.html"></div>
+
+        <div class="planet neptune" id="neptune"
+            data-name="海王星" data-details="太陽系最遠的行星，有時被稱為藍色冰巨星。"
+            data-url="planet_neptune.html">
+        </div>
+        
+    </div>
+
+    <div id="info-panel">
+        <h3 id="planet-name"></h3>
+        <p id="planet-details"></p>
+    </div>
+
+    <script>
+        // --- 1. 行星資料設定 (軌道半徑和公轉速度) ---
+        const PLANETS_DATA = [
+            { id: 'mercury', radius: 75, period: 8.8 },  // 半徑 (px), 週期 (秒)
+            { id: 'venus', radius: 100, period: 12 },
+            { id: 'earth', radius: 125, period: 18 },
+            { id: 'mars', radius: 150, period: 25 },
+            { id: 'jupiter', radius: 300, period: 60 },
+            { id: 'saturn', radius: 375, period: 90 },
+            { id: 'uranus', radius: 425, period: 120 },
+            { id: 'neptune', radius: 475, period: 150 },
+        ];
+
+        const center = 500; // 太陽系容器的中心點 (1000px / 2)
+
+        /**
+         * 計算並更新所有行星在軌道上的位置。
+         */
+        function updatePositions() {
+            const now = Date.now() / 1000; // 當前時間 (秒)
+
+            PLANETS_DATA.forEach(planet => {
+                const element = document.getElementById(planet.id);
+                if (!element) return;
+
+                // 根據週期計算角速度，得到當前角度
+                const angularSpeed = (2 * Math.PI) / planet.period;
+                const angle = now * angularSpeed;
+
+                // 使用三角函數計算 (x, y) 座標
+                const x = center + planet.radius * Math.cos(angle);
+                const y = center + planet.radius * Math.sin(angle);
+
+                element.style.left = `${x}px`;
+                element.style.top = `${y}px`;
+            });
+        }
+
+        // --- 2. 互動功能設定 ---
+        const sunElement = document.getElementById('sun');
+        const interactiveElements = document.querySelectorAll('.planet, .sun, #asteroid-belt');
+        const infoPanel = document.getElementById('info-panel');
+        const planetName = document.getElementById('planet-name');
+        const planetDetails = document.getElementById('planet-details');
+
+        interactiveElements.forEach(element => {
+            // 滑鼠進入事件 (顯示資訊面板，太陽手動放大)
+            element.addEventListener('mouseover', function() {
+                const name = this.getAttribute('data-name');
+                const details = this.getAttribute('data-details');
+                
+                planetName.textContent = name;
+                planetDetails.textContent = details;
+                infoPanel.style.display = 'block';
+                
+                // 太陽使用 JS 進行精確的放大和光暈調整
+                if (element === sunElement) {
+                    element.style.transform = 'scale(1.3)';
+                    element.style.boxShadow = '0 0 80px 30px rgba(255, 165, 0, 1), 0 0 120px 40px rgba(255, 69, 0, 0.8)';
+                    element.style.zIndex = '100';
+                }
+            });
+            
+            // 滑鼠離開事件 (隱藏資訊面板，太陽手動恢復)
+            element.addEventListener('mouseout', function() {
+                infoPanel.style.display = 'none';
+                
+                // 恢復太陽的原始樣式
+                if (element === sunElement) {
+                    element.style.transform = 'scale(1)'; 
+                    element.style.boxShadow = '0 0 60px 20px rgba(255, 165, 0, 0.9), 0 0 100px 30px rgba(255, 69, 0, 0.6)';
+                    element.style.zIndex = '10';
+                }
+            });
+
+            // 點擊事件 (導航到詳細資訊頁面)
+            element.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                if (url) { window.location.href = url; }
+            });
+        });
+
+        // --- 3. 動態生成小行星帶 ---
+        const asteroidBelt = document.getElementById('asteroid-belt');
+        const numAsteroids = 150;
+        
+        // 小行星帶的內外半徑範圍 (根據火星和木星軌道定義)
+        const BELT_MIN_RADIUS = 150;
+        const BELT_MAX_RADIUS = 300;
+        const BELT_CONTAINER_SIZE = BELT_MAX_RADIUS * 2;
+
+        asteroidBelt.style.width = `${BELT_CONTAINER_SIZE}px`;
+        asteroidBelt.style.height = `${BELT_CONTAINER_SIZE}px`;
+
+        for (let i = 0; i < numAsteroids; i++) {
+            const asteroid = document.createElement('div');
+            asteroid.classList.add('asteroid');
+            asteroid.style.pointerEvents = 'none';
+
+            const angle = Math.random() * 2 * Math.PI;
+            const radius = Math.random() * (BELT_MAX_RADIUS - BELT_MIN_RADIUS) + BELT_MIN_RADIUS;
+
+            // 計算小行星相對於容器中心的座標
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+
+            asteroid.style.left = `calc(50% + ${x}px)`;
+            asteroid.style.top = `calc(50% + ${y}px)`;
+            asteroid.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`;
+
+            asteroidBelt.appendChild(asteroid);
+        }
+        
+        // --- 4. 返回主頁按鈕功能 ---
+        const returnHomeButton = document.getElementById('return-home');
+        if (returnHomeButton) {
+            returnHomeButton.addEventListener('click', function() {
+                // 假設您的主頁是 index.html
+                window.location.href = 'index.html'; 
+            });
+        }
+        
+        // --- 5. 響應式縮放函數 (新增：確保在小螢幕上完整顯示) ---
+        function resizeSolarSystem() {
+            const container = document.querySelector('.solar-system');
+            if (!container) return;
+            
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const originalSize = 1000;
+            const padding = 40; // 預留邊距
+
+            // 1. 計算縮放比例
+            const scaleX = (viewportWidth - padding) / originalSize;
+            const scaleY = (viewportHeight - padding) / originalSize;
+            const finalScale = Math.min(scaleX, scaleY);
+            
+            // 將計算出的比例應用到 CSS 變量上
+            container.style.setProperty('--solar-scale', finalScale);
+            
+            // 2. 處理垂直居中 (考慮頂部元素如按鈕)
+            const topMargin = document.getElementById('return-home')?.offsetHeight || 0; 
+            const offset = (viewportHeight - (originalSize * finalScale)) / 2;
+            
+            // 確保太陽系不會被頂部按鈕遮住
+            container.style.marginTop = `${Math.max(offset, topMargin + 10)}px`;
+        }
+
+        // 首次載入和螢幕尺寸改變時執行縮放
+        window.addEventListener('load', resizeSolarSystem);
+        window.addEventListener('resize', resizeSolarSystem);
+
+        // --- 6. 啟動動畫循環 ---
+        setInterval(updatePositions, 30);
+    </script>
+</body>
+</html>

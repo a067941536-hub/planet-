@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="planetstyle.css">
+    <title>金星看光光:D</title>
+    <link rel="icon" type="image/png" href="images/venus.png">
+</head>
+<body>
+    
+    <header>
+        <h1>探索金星</h1>
+        <p><a href="index.html" class="back-link">← 返回星球選擇頁</a></p>
+        <p><a href="jdiagram.html" class="back-link">← 返回太陽系動態圖選擇頁</a></p>
+    </header>
+
+    <main>
+        <section class="planet-visual">
+            <img src="images/venus.png" alt="{{PLANET_NAME}} 的影像">
+        </section>
+
+        <section class="planet-facts">
+            <h2>基本概覽</h2>
+            <table>
+                <tr>
+                    <th>類型</th>
+                    <td>類地行星</td>
+                 </tr>
+                <tr>
+                    <th>平均直徑</th>
+                    <td>約 12,104 公里</td>
+                </tr>
+                <tr>
+                    <th>繞行恆星/星系</th>
+                    <td>繞行太陽/繞行銀河系中心 旋轉(約2.5億年一圈)</td>
+                </tr>
+                <tr>
+                    <th>發現年份(望遠鏡觀察到的)</th>
+                    <td>
+                        <p>肉眼就能觀測到了，因次無確切的觀測時間(以下列望遠鏡的時間為主)</p>
+                        <p>1610年伽利略首次用望遠鏡觀測，他發現金星有類似月球的盈虧現象，這為哥白尼提出的日心說提供了第一個直接的觀測證據。</p></td>
+                </tr>
+                 <tr>
+                    <th>距離(太陽)</th>
+                    <td>108200000000公尺(約0.72AU)</td>
+                </tr>
+                <tr>
+                    <th>衛星</th>
+                    <td>0 個</td>
+                </tr>
+                <tr>
+                    <th>自轉</th>
+                    <td>約 243 個地球日（逆向自轉）</td>
+                </tr>
+                <tr>
+                    <th>公轉</th>
+                    <td>約 225 個地球日</td>
+                </tr>
+                <tr>
+                    <th>表面</th>
+                    <td> 表面：無海洋，表面被厚重大氣覆蓋，環境極端</td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="planet-description">
+            <h2>關於 {{PLANET_NAME}}</h2>
+            <p>{{DETAILED_DESCRIPTION}}</p>
+            
+            </section>
+    </main>
+
+    <footer>
+        <p>&copy; 宇宙探索資料中心</p>
+    </footer>
+    
+</body>
+</html>

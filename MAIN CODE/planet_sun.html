@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="planetstyle.css">
+    <title>太陽看光光:D</title>
+</head>
+<body>
+    
+    <header>
+        <h1>探索太陽</h1>
+        <p><a href="index.html" class="back-link">← 返回星球選擇頁</a></p>
+        <p><a href="jdiagram.html" class="back-link">← 返回太陽系動態圖選擇頁</a></p>
+    </header>
+
+    <main>
+       <section class="planet-visual">
+            <a href="https://solarsystem.nasa.gov/gltf_embed/2352/" target="_blank">
+                <img src="images/sun.png" alt="地球的影像">
+            </a>
+        </section>
+
+        <section class="planet-facts">
+            <h2>基本概覽</h2>
+            <table>
+                <tr>
+                    <th>基本資料</td>
+                    <p><td>太陽是位於太陽系中心的恆星，它是一個近乎完美的熱電漿理想球體，透過其核心的核融合反應加熱到白熾。</p><p>太陽主要以可見光、紫外線和紅外線的形式輻射能量，是地球上生命最重要的能量來源。
+                </td></p>
+                <tr>
+                    <th>類型</th>
+                    <p><td>太陽是一顆G型主序星（G2V），被稱為黃矮星。<p>
+                    <p>但它的光實際上是白色的，黃矮星這個名稱並不準確。</td><p>
+                </tr>
+                <tr>
+                    <th>平均直徑</th>
+                    <td>{{DIAMETER}}</td>
+                </tr>
+                 <tr>
+                    <th>類型</th>
+                    <td>{{TYPE_OF_BODY}}</td>
+                </tr>
+                <tr>
+                    <th>星系</th>
+                    <td>銀河系</td>
+                </tr>
+                <tr>
+                    <th>發現年份</th>
+                    <td>肉眼就能觀察</td>
+                </tr>
+            </table>
+        </section>
+        <section class="planet-description">
+            <h2>關於 {{PLANET_NAME}}</h2>
+            <p>{{DETAILED_DESCRIPTION}}</p>
+            
+            </section>
+    </main>
+
+    <footer>
+        <p>&copy; 宇宙探索資料中心</p>
+    </footer>
+    
+</body>
+</html>
