@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星球探索 - 完整系統</title>
+    <link rel="stylesheet" href="SEstyle.css">
+</head>
+<body>
+
+<div class="wrapper">
+
+    <!-- 導覽列 -->
+    <header class="top-nav">
+        <div class="logo-img" style="width:55px;height:55px;background:#66b3ff;"></div>
+        <nav class="menu">
+            <a href="SEindex.html" class="menu-item">主頁</a>
+            <a href="planets.html" class="menu-item">星球</a>
+            <a href="other.html" class="menu-item">其他</a>
+            <a href="about.html" class="menu-item">關於</a>
+        </nav>
+    </header>
+
+    <main class="content-area">
+
+        <!-- 星系選單 -->
+        <div id="galaxy-menu" class="galaxy-map-container">
+
+            <div class="system-box" onclick="showSolarDetail()">
+                <h2 class="system-title">太陽系（點擊進入）</h2>
+                <div class="solar-model">
+                    <div class="sun-core"></div>
+                    <div class="orb orb-mercury"><div class="p-dot"></div></div>
+                    <div class="orb orb-earth"><div class="p-dot"></div></div>
+                    <div class="asteroid-ring"></div>
+                </div>
+            </div>
+
+            <div class="system-box">
+                <h2 class="system-title">仙女座星系</h2>
+                <div class="andromeda-model">
+                    <div class="galaxy-center"></div>
+                    <div class="spiral-arms"></div>
+                    <div class="spiral-arms delay"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 太陽系總覽卡片 -->
+        <div id="solar-detail-grid" class="planet-grid-container" style="display:none;">
+
+            <div class="grid-header">
+                <button class="back-btn" onclick="hideSolarDetail()">← 返回</button>
+                <h2 style="color:#66b3ff;">太陽系成員全覽</h2>
+            </div>
+
+            <div class="planet-grid">
+
+                <!-- 太陽 -->
+                <a href="planet_sun.html" class="planet-card">
+                    <div class="card-viz">
+                        <div class="sun-card-viz"></div>
+                    </div>
+                    <div class="card-info">
+                        <h3>太陽</h3>
+                        <p>核心恆星</p>
+                    </div>
+                </a>
+
+                <!-- 水星 -->
+                <a href="planet_merc.html" class="planet-card">
+                    <div class="card-viz">
+                        <div class="inner-path path-merc">
+                            <div class="sphere sphere-merc"></div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <h3>水星</h3>
+                        <p>最接近太陽</p>
+                    </div>
+                </a>
+
+                <!-- 金星 -->
+                <a href="planet_venus.html" class="planet-card">
+                    <div class="card-viz">
+                        <div class="inner-path path-venus">
+                            <div class="sphere sphere-venus"></div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <h3>金星</h3>
+                        <p>高溫行星</p>
+                    </div>
+                </a>
+
+                <!-- 地球 -->
+                <a href="planet_earth.html" class="planet-card">
+                    <div class="card-viz">
+                        <div class="inner-path path-earth">
+                            <div class="sphere sphere-earth"></div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <h3>地球</h3>
+                        <p>我們的家園</p>
+                    </div>
+                </a>
+
+                <!-- 火星 -->
+                <a href="planet_mars.html" class="planet-card">
+                    <div class="card-viz">
+                        <div class="inner-path path-mars">
+                            <div class="sphere sphere-mars"></div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <h3>火星</h3>
+                        <p>紅色星球</p>
+                    </div>
+                </a>
+
+                <!-- 小行星帶 -->
+                <a href="planet_asteroid.html" class="planet-card">
+                    <div class="card-viz">
+                        <div class="belt-viz"></div>
+                    </div>
+                    <div class="card-info">
+                        <h3>小行星帶</h3>
+                        <p>碎石運行區</p>
+                    </div>
+                </a>
+
+                <!-- 木星 -->
+                <a href="planet_jupiter.html" class="planet-card">
+                    <div class="card-viz">
+                        <div class="inner-path path-jup">
+                            <div class="sphere sphere-jup"></div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <h3>木星</h3>
+                        <p>氣態巨行星</p>
+                    </div>
+                </a>
+
+                <!-- 土星 -->
+                <a href="planet_saturn.html" class="planet-card">
+                    <div class="card-viz">
+                        <div class="inner-path path-sat">
+                            <div class="sphere sphere-sat"></div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <h3>土星</h3>
+                        <p>美麗星環</p>
+                    </div>
+                </a>
+
+                <!-- 天王星 -->
+                <a href="planet_uranus.html" class="planet-card">
+                    <div class="card-viz">
+                        <div class="inner-path path-ura">
+                            <div class="sphere sphere-ura"></div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <h3>天王星</h3>
+                        <p>冰巨星</p>
+                    </div>
+                </a>
+
+                <!-- 海王星 -->
+                <a href="planet_neptune.html" class="planet-card">
+                    <div class="card-viz">
+                        <div class="inner-path path-nep">
+                            <div class="sphere sphere-nep"></div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <h3>海王星</h3>
+                        <p>遠離太陽</p>
+                    </div>
+                </a>
+                <div class="planet-card solar-motion-card">
+<a href="jdiagram.html" class="planet-card solar-motion-card">
+    <div class="card-viz">
+        <div class="mini-solar-system">
+            <div class="mini-sun"></div>
+            <div class="mini-orb orb-1"></div>
+            <div class="mini-orb orb-2"></div>
+            <div class="mini-orb orb-3"></div>
+        </div>
+    </div>
+    <div class="card-info">
+        <h3>太陽系模型</h3>
+        <p>星系運動模擬</p>
+    </div>
+</a>
+        </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bottom-footer">
+        <div class="footer-grid">
+            <div class="footer-item">DC: <span>your_discord</span></div>
+            <div class="footer-item">IG: <span>your_instagram</span></div>
+            <div class="footer-item">Gmail: <span>service@email.com</span></div>
+            <div class="footer-item">Number: <span>0900-000-000</span></div>
+        </div>
+    </footer>
+
+</div>
+
+<script>
+function showSolarDetail() {
+    document.getElementById('galaxy-menu').style.display = 'none';
+    document.getElementById('solar-detail-grid').style.display = 'block';
+}
+function hideSolarDetail() {
+    document.getElementById('galaxy-menu').style.display = 'flex';
+    document.getElementById('solar-detail-grid').style.display = 'none';
+}
+</script>
+
+</body>
+</html>

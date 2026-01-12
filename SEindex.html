@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星球探索 - 宇宙風主頁</title>
+    <link rel="stylesheet" href="SEstyle.css">
+</head>
+<body>
+
+    <div class="wrapper">
+        <header class="top-nav">
+            <a href="index.html" class="logo-link">
+                <img src="logo.png" alt="商標" class="logo-img">
+            </a>
+            <nav class="menu">
+                <a href="SEindex.html" class="menu-item">主頁</a>
+                <a href="SEplanets.html" class="menu-item">星球</a>
+                <a href="SEother.html" class="menu-item">其他</a>
+                <a href="SEabout.html" class="menu-item">關於</a>
+            </nav>
+        </header>
+
+        <main class="content-area">
+            <div class="main-container">
+                
+                <div class="announcement-board">
+                    <div class="announcement-track">
+                        <div class="news-item">✨ 今日運勢已更新，快來查看你的星球星象！</div>
+                        <div class="news-item">🚀 太陽系探索：火星新照片已上傳。</div>
+                        <div class="news-item">🔭 提示：點擊下方圓點可切換看板。</div>
+                    </div>
+                </div>
+
+                <div class="slider-container">
+                    <div class="slider" id="main-slider">
+                        <div class="slide">
+                            <img src="https://via.placeholder.com/1000x500/1a1a2e/ffffff?text=Slide+1" alt="看板1">
+                            <div class="slide-text">今日運勢：點擊查看</div>
+                        </div>
+                        <div class="slide">
+                            <img src="https://via.placeholder.com/1000x500/0b3d91/ffffff?text=Slide+2" alt="看板2">
+                            <div class="slide-text">探索太陽系秘辛</div>
+                        </div>
+                        <div class="slide">
+                            <img src="https://via.placeholder.com/1000x500/333333/ffffff?text=Slide+3" alt="看板3">
+                            <div class="slide-text">更多神秘宇宙訊息</div>
+                        </div>
+                    </div>
+
+                    <div class="slider-nav">
+                        <div class="dot active" onclick="goToSlide(0)"></div>
+                        <div class="dot" onclick="goToSlide(1)"></div>
+                        <div class="dot" onclick="goToSlide(2)"></div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="bottom-footer">
+            <div class="footer-grid">
+                <div class="footer-item">DC: <span class="text-white">your_discord</span></div>
+                <div class="footer-item">iG: <span class="text-white">your_instagram</span></div>
+                <div class="footer-item">gamil: <span class="text-white">service@email.com</span></div>
+                <div class="footer-item">number: <span class="text-white">0900-000-000</span></div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const slider = document.getElementById('main-slider');
+        const dots = document.querySelectorAll('.dot');
+        let currentIndex = 0;
+
+        function updateDots(index) {
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+        }
+
+        function goToSlide(index) {
+            currentIndex = index;
+            const width = slider.clientWidth;
+            slider.scrollTo({
+                left: width * index,
+                behavior: 'smooth'
+            });
+            updateDots(index);
+        }
+
+        // 自動輪播
+        function autoPlay() {
+            currentIndex = (currentIndex + 1) % dots.length;
+            goToSlide(currentIndex);
+        }
+
+        let timer = setInterval(autoPlay, 5000);
+
+        // 使用者手動滑動後更新圓點
+        slider.addEventListener('scroll', () => {
+            const index = Math.round(slider.scrollLeft / slider.clientWidth);
+            updateDots(index);
+            currentIndex = index;
+        });
+    </script>
+</body>
+</html>
