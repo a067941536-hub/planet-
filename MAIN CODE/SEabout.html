@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星球探索 - 宇宙風主頁</title>
+    <link rel="stylesheet" href="SEstyle.css">
+</head>
+<body>
+
+    <div class="wrapper">
+        <header class="top-nav">
+            <a href="index.html" class="logo-link">
+                <img src="logo.png" alt="商標" class="logo-img">
+            </a>
+            <nav class="menu">
+                <a href="index.html" class="menu-item">主頁</a>
+                <a href="SEplanets.html" class="menu-item">星球</a>
+                <a href="SEother.html" class="menu-item">其他</a>
+                <a href="SEabout.html" class="menu-item">關於</a>
+            </nav>
+        </header>
+ 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <footer class="bottom-footer">
+            <div class="footer-grid">
+                <div class="footer-item">DC: <span class="text-white">your_discord</span></div>
+                <div class="footer-item">iG: <span class="text-white">your_instagram</span></div>
+                <div class="footer-item">gamil: <span class="text-white">service@email.com</span></div>
+                <div class="footer-item">number: <span class="text-white">0900-000-000</span></div>
+            </div>
+        </footer>
+    </div>
+<script>
+        const slider = document.getElementById('main-slider');
+        const dots = document.querySelectorAll('.dot');
+        let currentIndex = 0;
+
+        function updateDots(index) {
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+        }
+
+        function goToSlide(index) {
+            currentIndex = index;
+            const width = slider.clientWidth;
+            slider.scrollTo({
+                left: width * index,
+                behavior: 'smooth'
+            });
+            updateDots(index);
+        }
+        </script>
+    </body>
+</html>
+ 
+ 

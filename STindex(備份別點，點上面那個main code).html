@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>星球</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="images/planeticon.png">
+</head>
+<body>
+
+<h1>🌌 選擇你要探索的星球</h1>
+
+<div class="selector-box">
+    <label>選擇星系：</label>
+    <select id="galaxySelect">
+        <option value="">請選擇</option>
+        <option value="solar">太陽系</option>
+        <option value="andromeda">仙女座星系</option>
+        <option value="milkyway">銀河系</option>
+    </select>
+
+    <label>選擇星球：</label>
+    <select id="planetSelect" disabled>
+        <option value="">請先選星系</option>
+    </select>
+</div>
+    
+<div class="diagram-entry">
+    <h2>🪐 太陽系動態示意圖(不是當前位子)</h2>
+    <p>點擊下方進入示意圖介面</p>
+
+    <!-- 按鈕 -->
+    <a href="jdiagram.html" class="diagram-btn">進入太陽系示意圖</a>
+</div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

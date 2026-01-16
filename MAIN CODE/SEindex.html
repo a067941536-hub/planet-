@@ -34,6 +34,10 @@
 
                 <div class="slider-container">
                     <div class="slider" id="main-slider">
+                         <div class="slide">
+                         <img id="nasa-img" src="" alt="每日太空照片">
+                         <div class="slide-text" id="nasa-title">今日太空照片</div>
+                            </div>
                         <div class="slide">
                             <img src="https://via.placeholder.com/1000x500/1a1a2e/ffffff?text=Slide+1" alt="看板1">
                             <div class="slide-text">今日運勢：點擊查看</div>
@@ -52,6 +56,7 @@
                         <div class="dot active" onclick="goToSlide(0)"></div>
                         <div class="dot" onclick="goToSlide(1)"></div>
                         <div class="dot" onclick="goToSlide(2)"></div>
+                        <div class="dot" onclick="goToSlide(3)"></div>
                     </div>
                 </div>
 
@@ -102,6 +107,34 @@
             updateDots(index);
             currentIndex = index;
         });
+    
+        // 新增：抓取 NASA 每日太空照片並顯示在看板 4
+    async function updateDailySpacePhoto() {
+    try {
+        // 使用 NASA 提供的免申請測試 Key: DEMO_KEY
+        const response = await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');
+        const data = await response.json();
+
+        const imgElement = document.getElementById('nasa-img');
+        const titleElement = document.getElementById('nasa-title');
+
+        if (data.media_type === 'image') {
+            // 如果今天是照片，直接顯示
+            imgElement.src = data.url; 
+            titleElement.innerText = "今日太空：" + data.title;
+        } else {
+            // 如果今天剛好是影片，就給它一張漂亮的備用星空圖
+            imgElement.src = "https://images-assets.nasa.gov/image/PIA12348/PIA12348~medium.jpg";
+            titleElement.innerText = "今日太空：探索星系";
+        }
+       } catch (error) {
+        console.log("NASA 照片載入失敗，使用預設圖");
+        document.getElementById('nasa-img').src = "https://via.placeholder.com/1000x500/000000/ffffff?text=Deep+Space";
+        }
+      }
+
+     // 確保網頁一打開就去抓圖
+       window.addEventListener('DOMContentLoaded', updateDailySpacePhoto);
     </script>
 </body>
 </html>

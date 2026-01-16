@@ -1,38 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>星球</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="images/planeticon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星球探索 - 宇宙風主頁</title>
+    <link rel="stylesheet" href="SEstyle.css">
 </head>
 <body>
 
-<h1>🌌 選擇你要探索的星球</h1>
+    <div class="wrapper">
+        <header class="top-nav">
+            <a href="index.html" class="logo-link">
+                <img src="logo.png" alt="商標" class="logo-img">
+            </a>
+            <nav class="menu">
+                <a href="SEindex.html" class="menu-item">主頁</a>
+                <a href="SEplanets.html" class="menu-item">星球</a>
+                <a href="SEother.html" class="menu-item">其他</a>
+                <a href="SEabout.html" class="menu-item">關於</a>
+            </nav>
+        </header>
 
-<div class="selector-box">
-    <label>選擇星系：</label>
-    <select id="galaxySelect">
-        <option value="">請選擇</option>
-        <option value="solar">太陽系</option>
-        <option value="andromeda">仙女座星系</option>
-        <option value="milkyway">銀河系</option>
-    </select>
+        <main class="content-area">
+            <div class="main-container">
+                
+                <div class="announcement-board">
+                    <div class="announcement-track">
+                        <div class="news-item">✨ 今日運勢已更新，快來查看你的星球星象！</div>
+                        <div class="news-item">🚀 太陽系探索：火星新照片已上傳。</div>
+                        <div class="news-item">🔭 提示：點擊下方圓點可切換看板。</div>
+                    </div>
+                </div>
 
-    <label>選擇星球：</label>
-    <select id="planetSelect" disabled>
-        <option value="">請先選星系</option>
-    </select>
-</div>
+                <div class="slider-container">
+                    <div class="slider" id="main-slider">
+                         <div class="slide">
+                         <img id="nasa-img" src="" alt="每日太空照片">
+                         <div class="slide-text" id="nasa-title">今日太空照片</div>
+                            </div>
+                        <div class="slide">
+                            <img src="https://via.placeholder.com/1000x500/1a1a2e/ffffff?text=Slide+1" alt="看板1">
+                            <div class="slide-text">今日運勢：點擊查看</div>
+                        </div>
+                        <div class="slide">
+                            <img src="https://via.placeholder.com/1000x500/0b3d91/ffffff?text=Slide+2" alt="看板2">
+                            <div class="slide-text">探索太陽系秘辛</div>
+                        </div>
+                        <div class="slide">
+                            <img src="https://via.placeholder.com/1000x500/333333/ffffff?text=Slide+3" alt="看板3">
+                            <div class="slide-text">更多神秘宇宙訊息</div>
+                        </div>
+                    </div>
+
+                    <div class="slider-nav">
+                        <div class="dot active" onclick="goToSlide(0)"></div>
+                        <div class="dot" onclick="goToSlide(1)"></div>
+                        <div class="dot" onclick="goToSlide(2)"></div>
+                        <div class="dot" onclick="goToSlide(3)"></div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="bottom-footer">
+            <div class="footer-grid">
+                <div class="footer-item">DC: <span class="text-white">your_discord</span></div>
+                <div class="footer-item">iG: <span class="text-white">your_instagram</span></div>
+                <div class="footer-item">gamil: <span class="text-white">service@email.com</span></div>
+                <div class="footer-item">number: <span class="text-white">0900-000-000</span></div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const slider = document.getElementById('main-slider');
+        const dots = document.querySelectorAll('.dot');
+        let currentIndex = 0;
+
+        function updateDots(index) {
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+        }
+
+        function goToSlide(index) {
+            currentIndex = index;
+            const width = slider.clientWidth;
+            slider.scrollTo({
+                left: width * index,
+                behavior: 'smooth'
+            });
+            updateDots(index);
+        }
+
+        // 自動輪播
+        function autoPlay() {
+            currentIndex = (currentIndex + 1) % dots.length;
+            goToSlide(currentIndex);
+        }
+
+        let timer = setInterval(autoPlay, 5000);
+
+        // 使用者手動滑動後更新圓點
+        slider.addEventListener('scroll', () => {
+            const index = Math.round(slider.scrollLeft / slider.clientWidth);
+            updateDots(index);
+            currentIndex = index;
+        });
     
-<div class="diagram-entry">
-    <h2>🪐 太陽系動態示意圖(不是當前位子)</h2>
-    <p>點擊下方進入示意圖介面</p>
+        // 新增：抓取 NASA 每日太空照片並顯示在看板 4
+    async function updateDailySpacePhoto() {
+    try {
+        // 使用 NASA 提供的免申請測試 Key: DEMO_KEY
+        const response = await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');
+        const data = await response.json();
 
-    <!-- 按鈕 -->
-    <a href="jdiagram.html" class="diagram-btn">進入太陽系示意圖</a>
-</div>
-    
-    <script src="script.js"></script>
+        const imgElement = document.getElementById('nasa-img');
+        const titleElement = document.getElementById('nasa-title');
+
+        if (data.media_type === 'image') {
+            // 如果今天是照片，直接顯示
+            imgElement.src = data.url; 
+            titleElement.innerText = "今日太空：" + data.title;
+        } else {
+            // 如果今天剛好是影片，就給它一張漂亮的備用星空圖
+            imgElement.src = "https://images-assets.nasa.gov/image/PIA12348/PIA12348~medium.jpg";
+            titleElement.innerText = "今日太空：探索星系";
+        }
+       } catch (error) {
+        console.log("NASA 照片載入失敗，使用預設圖");
+        document.getElementById('nasa-img').src = "https://via.placeholder.com/1000x500/000000/ffffff?text=Deep+Space";
+        }
+      }
+
+     // 確保網頁一打開就去抓圖
+       window.addEventListener('DOMContentLoaded', updateDailySpacePhoto);
+    </script>
 </body>
 </html>
