@@ -664,3 +664,93 @@ html, body {
 /* 讓不同軌道的點顏色有區別 */
 .orb-2::after { background: #e3bb76; width: 8px; height: 8px; }
 .orb-3::after { background: #2271b3; width: 7px; height: 7px; }
+/*==============================================以下為SEplanet的板======================================================*/
+/* 星座分類進入點的視覺效果 */
+.zodiac-entrance-viz {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.golden-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px dashed #ffcc66; /* 金色虛線圈 */
+    border-radius: 50%;
+    animation: rotate 25s linear infinite;
+}
+
+.star-center {
+    font-size: 3rem;
+    filter: drop-shadow(0 0 10px #ffcc66);
+}
+
+/* 讓星座方塊在滑鼠移上去時有金色發光效果 */
+.system-box:hover {
+    border-color: #ffcc66;
+    box-shadow: 0 0 30px rgba(255, 204, 102, 0.2);
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+/* 基礎結構 */
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /*background: #141435;*/
+}
+
+.content-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* 大方塊初始置中 */
+    padding: 60px 20px;
+}
+
+/* 12星座符號樣式 */
+.zodiac-symbol {
+    font-size: 3.5rem;
+    color: #ffcc66;
+    text-shadow: 0 0 15px rgba(255, 204, 102, 0.5);
+}
+
+/* 讓頁尾文字藍色強調 */
+.text-blue {
+    color: #66b3ff;
+    margin-left: 5px;
+}
+
+/* 返回按鈕樣式 */
+.back-btn {
+    background: none;
+    border: 1px solid #66b3ff;
+    color: #66b3ff;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.back-btn:hover {
+    background: rgba(102, 179, 255, 0.1);
+}
+.slide-link {
+    position: absolute; /* 絕對定位 */
+    top: 0;
+    left: 0;
+    width: 100%;       /* 撐滿寬 */
+    height: 100%;      /* 撐滿高 */
+    z-index: 100;      /* 確保在圖片和文字的最前方 */
+    display: block;
+}

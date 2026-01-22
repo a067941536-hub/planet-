@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>星球探索 - 宇宙風主頁</title>
+    <title>十二星座運勢 - 宇宙探索</title>
     <link rel="stylesheet" href="SEstyle.css">
 </head>
 <body>
@@ -20,51 +20,104 @@
                 <a href="SEabout.html" class="menu-item">關於</a>
             </nav>
         </header>
- 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+        <main class="content-area">
+            <div id="other-menu" class="galaxy-map-container">
+                <div class="system-box zodiac-entrance" onclick="toggleZodiacList(true)">
+                    <h2 class="system-title">黃道十二宮星系</h2>
+                    <div class="zodiac-entrance-viz">
+                        <div class="golden-ring"></div>
+                        <div class="star-center">✨</div>
+                    </div>
+                    <p class="click-hint">點擊查看今日運勢全覽</p>
+                </div>
+            </div>
+
+            <div id="zodiac-detail-grid" class="planet-grid-container" style="display:none;">
+                <div class="grid-header">
+                    <button class="back-btn" onclick="toggleZodiacList(false)">← 返回分類</button>
+                    <h2 style="color:#ffcc66;">十二星座全覽</h2>
+                </div>
+                
+                <div class="planet-grid">
+                    <a href="zodiac_aries.html" class="planet-card">
+                        <div class="card-viz"><div class="zodiac-symbol">♈</div></div>
+                        <div class="card-info"><h3>白羊座</h3><p>03.21 - 04.19</p></div>
+                    </a>
+                    <a href="zodiac_taurus.html" class="planet-card">
+                        <div class="card-viz"><div class="zodiac-symbol">♉</div></div>
+                        <div class="card-info"><h3>金牛座</h3><p>04.20 - 05.20</p></div>
+                    </a>
+                    <a href="zodiac_gemini.html" class="planet-card">
+                        <div class="card-viz"><div class="zodiac-symbol">♊</div></div>
+                        <div class="card-info"><h3>雙子座</h3><p>05.21 - 06.21</p></div>
+                    </a>
+                    <a href="zodiac_cancer.html" class="planet-card">
+                        <div class="card-viz"><div class="zodiac-symbol">♋</div></div>
+                        <div class="card-info"><h3>巨蟹座</h3><p>06.22 - 07.22</p></div>
+                    </a>
+                    <a href="zodiac_leo.html" class="planet-card">
+                        <div class="card-viz"><div class="zodiac-symbol">♌</div></div>
+                        <div class="card-info"><h3>獅子座</h3><p>07.23 - 08.22</p></div>
+                    </a>
+                    <a href="zodiac_virgo.html" class="planet-card">
+                        <div class="card-viz"><div class="zodiac-symbol">♍</div></div>
+                        <div class="card-info"><h3>處女座</h3><p>08.23 - 09.22</p></div>
+                    </a>
+                    <a href="zodiac_libra.html" class="planet-card">
+                        <div class="card-viz"><div class="zodiac-symbol">♎</div></div>
+                        <div class="card-info"><h3>天秤座</h3><p>09.23 - 10.23</p></div>
+                    </a>
+                    <a href="zodiac_scorpio.html" class="planet-card">
+                        <div class="card-viz"><div class="zodiac-symbol">♏</div></div>
+                        <div class="card-info"><h3>天蠍座</h3><p>10.24 - 11.22</p></div>
+                    </a>
+                    <a href="zodiac_sagittarius.html" class="planet-card">
+                        <div class="card-viz"><div class="zodiac-symbol">♐</div></div>
+                        <div class="card-info"><h3>射手座</h3><p>11.23 - 12.21</p></div>
+                    </a>
+                    <a href="zodiac_capricorn.html" class="planet-card">
+                        <div class="card-viz"><div class="zodiac-symbol">♑</div></div>
+                        <div class="card-info"><h3>摩羯座</h3><p>12.22 - 01.19</p></div>
+                    </a>
+                    <a href="zodiac_aquarius.html" class="planet-card">
+                        <div class="card-viz"><div class="zodiac-symbol">♒</div></div>
+                        <div class="card-info"><h3>水瓶座</h3><p>01.20 - 02.18</p></div>
+                    </a>
+                    <a href="zodiac_pisces.html" class="planet-card">
+                        <div class="card-viz"><div class="zodiac-symbol">♓</div></div>
+                        <div class="card-info"><h3>雙魚座</h3><p>02.19 - 03.20</p></div>
+                    </a>
+                </div>
+            </div>
+        </main>
+
         <footer class="bottom-footer">
             <div class="footer-grid">
-                <div class="footer-item">DC: <span class="text-white">your_discord</span></div>
-                <div class="footer-item">iG: <span class="text-white">your_instagram</span></div>
-                <div class="footer-item">gamil: <span class="text-white">service@email.com</span></div>
-                <div class="footer-item">number: <span class="text-white">0900-000-000</span></div>
+                <div class="footer-item">DC: <span class="text-blue">yukixiyu</span></div>
+                <div class="footer-item">IG: <span class="text-blue">YukixiYu</span></div>
+                <div class="footer-item">Gmail: <span class="text-blue">a067941536@gmail.com</span></div>
+                <div class="footer-item">Number: <span class="text-blue">0903959938</span></div>
             </div>
         </footer>
     </div>
-<script>
-        const slider = document.getElementById('main-slider');
-        const dots = document.querySelectorAll('.dot');
-        let currentIndex = 0;
 
-        function updateDots(index) {
-            dots.forEach(dot => dot.classList.remove('active'));
-            dots[index].classList.add('active');
+    <script>
+        function toggleZodiacList(showDetail) {
+            const otherMenu = document.getElementById('other-menu');
+            const zodiacGrid = document.getElementById('zodiac-detail-grid');
+            const contentArea = document.querySelector('.content-area');
+            
+            if (showDetail) {
+                otherMenu.style.display = 'none';
+                zodiacGrid.style.display = 'block';
+                contentArea.style.alignItems = 'flex-start'; 
+            } else {
+                otherMenu.style.display = 'flex';
+                zodiacGrid.style.display = 'none';
+                contentArea.style.alignItems = 'center'; 
+            }
         }
-
-        function goToSlide(index) {
-            currentIndex = index;
-            const width = slider.clientWidth;
-            slider.scrollTo({
-                left: width * index,
-                behavior: 'smooth'
-            });
-            updateDots(index);
-        }
-        </script>
-    </body>
+    </script>
+</body>
 </html>
- 
- 
