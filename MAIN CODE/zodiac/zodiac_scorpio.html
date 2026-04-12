@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星座指南 - 夢幻占星探索</title>
+    <style>
+        /* --- 全域設定 --- */
+        body {
+            background-color: #0a0515; /* 深紫黑 */
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', "Microsoft JhengHei", sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+        }
+
+        .zodiac-detail-page {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* --- 校正後的返回按鈕 --- */
+        .back-nav {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start; /* 確保靠左 */
+            margin-bottom: 5px;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #4da3ff;
+            font-size: 13px;
+            padding: 6px 14px;
+            background: rgba(77, 163, 255, 0.1);
+            border: 1px solid rgba(77, 163, 255, 0.5);
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(77, 163, 255, 0.2);
+            border-color: #4da3ff;
+            box-shadow: 0 0 10px rgba(77, 163, 255, 0.3);
+            transform: translateX(-2px);
+        }
+
+        /* --- 玻璃擬態卡片 --- */
+        .zodiac-header, .zodiac-intro-box, .fortune-item {
+            background: rgba(40, 20, 70, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(191, 119, 246, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        /* 頂部標題 */
+        .zodiac-header {
+            text-align: center;
+            border: 1.5px solid rgba(255, 204, 102, 0.3);
+        }
+
+        .zodiac-header h1 {
+            color: #ffcc66;
+            text-shadow: 0 0 15px rgba(255, 204, 102, 0.4);
+            letter-spacing: 4px;
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        /* 星座介紹 */
+        .zodiac-intro-box .intro-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .symbol-large {
+            font-size: 5rem;
+            color: #ffcc66;
+            filter: drop-shadow(0 0 12px rgba(255, 204, 102, 0.5));
+        }
+
+        .intro-text h2 {
+            color: #d1a3f9;
+            margin-bottom: 12px;
+            font-size: 1.5rem;
+        }
+
+        .intro-text p {
+            color: #e0e0e0;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        /* 每日運勢佈局 */
+        .fortune-title {
+            text-align: center;
+            color: #ffffff;
+            margin: 25px 0 15px 0;
+            font-size: 1.4rem;
+        }
+
+        .fortune-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .fortune-item {
+            transition: all 0.3s ease;
+        }
+
+        .fortune-item:hover {
+            transform: translateY(-5px);
+            border-color: #ffcc66;
+        }
+
+        .item-icon {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .fortune-item h3 {
+            color: #ffcc66;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .fortune-item p {
+            color: #cccccc;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* 手機版適應 */
+        @media (max-width: 600px) {
+            .zodiac-intro-box .intro-content { flex-direction: column; text-align: center; }
+            .fortune-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="zodiac-detail-page">
+        <nav class="back-nav">
+            <a href="javascript:history.back()" class="back-btn">← 返回</a>
+        </nav>
+
+        <header class="zodiac-header">
+            <h1>星座指南 - 夢幻占星探索</h1>
+        </header>
+
+        <section class="zodiac-intro-box">
+            <div class="intro-content">
+                <div class="symbol-large">♏</div>
+                <div class="intro-text">
+                    <h2>天蠍座介紹</h2>
+                    <p>神祕而深沉的星座，擁有極強的洞察力與意志力。在群星的引導下，天蠍座展現出如同冥王星般的轉化力量，能看透事物的本質，並在平靜的表面下蘊藏著熾熱的情感。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="fortune-area">
+            <h2 class="fortune-title" id="display-date">正在連結星軌...</h2>
+            
+            <div class="fortune-grid">
+                <div class="fortune-item">
+                    <span class="item-icon">🧭</span>
+                    <h3>外出指南</h3>
+                    <p id="travel-fortune">觀測中...</p>
+                </div>
+                <div class="fortune-item">
+                    <span class="item-icon">💜</span>
+                    <h3>感情運勢</h3>
+                    <p id="love-fortune">解讀中...</p>
+                </div>
+                <div class="fortune-item">
+                    <span class="item-icon">✨</span>
+                    <h3>健康狀態</h3>
+                    <p id="health-fortune">感應中...</p>
+                </div>
+                <div class="fortune-item">
+                    <span class="item-icon">🍀</span>
+                    <h3>幸運元素</h3>
+                    <p id="lucky-fortune">讀取中...</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 運勢資料庫
+        const fortuneData = {
+            travel: [
+                "今天適合前往水源地或安靜的咖啡廳，藍色配件能提升你的偏財運。",
+                "適合到大自然中行走，森林的芬多精能淨化你的磁場。",
+                "適合待在安靜的室內空間，午後的一杯熱茶會帶來靈感。",
+                "遠行有貴人相助，特別是往北方走會有意外驚喜。",
+                "建議穿上淺紫色衣物出門，能有效避開今日的小口角。"
+            ],
+            love: [
+                "桃花運極佳，今天適合參與社交聚會或與老友聯繫。",
+                "單身者可能在意外場合遇到志同道合的人，保持微笑。",
+                "感情穩定，適合與伴侶共同規劃未來的旅行藍圖。",
+                "今天適合深入溝通，把藏在心裡的話溫柔地說出來。",
+                "星象顯示今日不宜爭吵，凡事退一步海闊天空。"
+            ],
+            health: [
+                "能量飽滿，適合進行戶外運動或核心訓練，排除壓力。",
+                "注意睡眠品質，晚間適合進行冥想或溫和的拉伸運動。",
+                "注意眼睛疲勞，每用電腦一小時請起身看看遠方。",
+                "腸胃系統較為敏感，建議今日飲食以清淡、純淨為主。",
+                "適度補充水分，你的身體正在呼喚純淨的天然能量。"
+            ],
+            luckColors: ["星雲紫", "月光銀", "玫瑰金", "深海藍", "極光綠"],
+            luckItems: ["銀製吊飾", "水晶原石", "手寫筆記本", "薰衣草香氛", "古銅鑰匙"]
+        };
+
+        function initFortune() {
+            // 1. 取得 UTC 日期
+            const now = new Date();
+            const y = now.getUTCFullYear();
+            const m = now.getUTCMonth();
+            const d = now.getUTCDate();
+            
+            // 2. 建立日期種子
+            const seed = y * 10000 + (m + 1) * 100 + d;
+
+            // 3. 偽隨機函數 (同種子同結果)
+            const getSeeded = (max, offset) => {
+                const x = Math.sin(seed + offset) * 10000;
+                return Math.floor((x - Math.floor(x)) * max);
+            };
+
+            // 4. 填入內容
+            document.getElementById('travel-fortune').innerText = fortuneData.travel[getSeeded(fortuneData.travel.length, 1)];
+            document.getElementById('love-fortune').innerText = fortuneData.love[getSeeded(fortuneData.love.length, 2)];
+            document.getElementById('health-fortune').innerText = fortuneData.health[getSeeded(fortuneData.health.length, 3)];
+            
+            const color = fortuneData.luckColors[getSeeded(fortuneData.luckColors.length, 4)];
+            const item = fortuneData.luckItems[getSeeded(fortuneData.luckItems.length, 5)];
+            document.getElementById('lucky-fortune').innerHTML = `幸運色：${color}<br>幸運物：${item}`;
+
+            // 5. 更新標題日期
+            const dateStr = `${y}.${String(m + 1).padStart(2, '0')}.${String(d).padStart(2, '0')}`;
+            document.getElementById('display-date').innerText = `每日運勢 (UTC基準) - ${dateStr}`;
+        }
+
+        // 確保視窗載入完成後執行
+        window.addEventListener('load', initFortune);
+    </script>
+</body>
+</html>
