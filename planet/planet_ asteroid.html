@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="planetstyle.css">
+    <title>小行星帶看光光 :D</title>
+    <link rel="icon" type="image/png" href="../images/asteroid.png">
+    <style>
+        /* 新增：頁面背景與 canvas 設定 */
+        body {
+            background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a12 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+            margin: 0;
+            cursor: crosshair;
+        }
+
+        #effect-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; /* 不擋住點擊 */
+            z-index: 9999;
+        }
+
+        /* 強化視覺卡片樣式 */
+        main {
+            position: relative;
+            z-index: 10;
+            max-width: 900px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .planet-visual img {
+            width: 250px;
+            filter: drop-shadow(0 0 15px rgba(200, 200, 200, 0.3));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .back-link {
+            color: #66b3ff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-right: 15px;
+            transition: 0.3s;
+        }
+
+        .back-link:hover { color: #fff; text-shadow: 0 0 10px #66b3ff; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { color: #66b3ff; width: 30%; }
+    </style>
+</head>
+<body>
+
+    <canvas id="effect-canvas"></canvas>
+
+    <header style="text-align: center; padding: 40px 20px;">
+        <h1 style="font-size: 2.5rem; letter-spacing: 5px; color: #fff;">探索小行星帶</h1>
+        <div style="margin-top: 10px;">
+            <a href="../SEplanets.html" class="back-link">← 返回星球選擇</a>
+            <a href="../jdiagram.html" class="back-link">← 太陽系動態圖</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="planet-visual" style="text-align: center;">
+            <img src="../images/asteroid.png" alt="小行星帶影像">
+        </section>
+
+        <section class="planet-facts">
+            <h2>📊 基本概覽</h2>
+            <table>
+                <tr>
+                    <th>類型</th>
+                    <td>環太陽碎屑盤 (主小行星帶)</td>
+                </tr>
+                <tr>
+                    <th>分布範圍</th>
+                    <td>約 2.1 至 3.3 天文單位 (AU)</td>
+                </tr>
+                <tr>
+                    <th>繞行恆星</th>
+                    <td>太陽 (位於火星與木星軌道之間)</td>
+                </tr>
+                <tr>
+                    <th>主要成員</th>
+                    <td>穀神星 (Ceres)、智神星、婚神星、灶神星</td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="planet-description">
+            <h2>🔍 關於 小行星帶</h2>
+            <p>
+                小行星帶是太陽系內介於<b>火星</b>和<b>木星</b>軌道之間的一個環狀區域。這裡聚集了數百萬顆大小不一的小行星。
+                根據天文學家的推測，這裡原本可能形成一顆行星，但由於木星強大的<b>重力擾動</b>，使得這些碎石無法凝聚，
+                最終維持著散亂的狀態繞行太陽。
+            </p>
+            <p>
+                其中最大的天體是「穀神星」，它同時也被歸類為<b>矮行星</b>。雖然小行星數量眾多，但它們之間的距離其實非常遙遠，
+                並不像電影中演的那樣擁擠。
+            </p>
+        </section>
+    </main>
+
+    <footer style="text-align: center; padding: 40px; color: #666;">
+        <p>&copy; 宇宙探索資料中心 | 2026 Space Exploration</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('effect-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor(x, y, color, speedX, speedY, size) {
+                this.x = x; this.y = y; this.color = color;
+                this.speedX = speedX; this.speedY = speedY;
+                this.size = size; this.life = 1;
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY;
+                this.life -= 0.02;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(${this.color}, ${this.life})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // 游標移動：星塵尾跡
+        window.addEventListener('mousemove', (e) => {
+            for(let i=0; i<2; i++) {
+                particles.push(new Particle(
+                    e.clientX, e.clientY, 
+                    '102, 179, 255', // 藍白色星塵
+                    (Math.random()-0.5)*2, (Math.random()-0.5)*2, 
+                    Math.random()*3
+                ));
+            }
+        });
+
+        // 點擊：能量噴發
+        window.addEventListener('click', (e) => {
+            for(let i=0; i<15; i++) {
+                particles.push(new Particle(
+                    e.clientX, e.clientY, 
+                    '255, 255, 255', 
+                    (Math.random()-0.5)*6, (Math.random()-0.5)*6, 
+                    Math.random()*5
+                ));
+            }
+        });
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles = particles.filter(p => p.life > 0);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>

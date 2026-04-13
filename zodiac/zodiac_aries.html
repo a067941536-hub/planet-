@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>白羊座詳解 - 魔幻占星</title>
+    <style>
+        /* --- 1. 全域背景與佈局校正 (白羊座主題：深紅與火) --- */
+        body {
+            background-color: #150505; /* 深紅黑背景 */
+            margin: 0;
+            padding: 40px 20px;
+            font-family: 'Segoe UI', "Microsoft JhengHei", sans-serif;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            cursor: crosshair; 
+        }
+
+        /* --- 2. 畫布設定 (核心特效層) --- */
+        #magic-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            position: relative;
+            z-index: 1; 
+        }
+
+        /* 返回按鈕 */
+        .back-nav { width: 100%; display: flex; justify-content: flex-start; margin-bottom: 5px; }
+        .back-btn {
+            text-decoration: none;
+            color: #ff6b6b;
+            font-size: 13px;
+            padding: 6px 14px;
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.5);
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .back-btn:hover { background: rgba(255, 107, 107, 0.3); box-shadow: 0 0 10px rgba(255, 107, 107, 0.5); }
+
+        /* 通用玻璃擬態卡片 */
+        .glass-card {
+            background: rgba(70, 20, 20, 0.4); /* 半透明深紅 */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(246, 119, 119, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        /* 第一層：標題區 */
+        .zodiac-header { text-align: center; border: 1.5px solid rgba(255, 140, 102, 0.3); }
+        .zodiac-header h1 { color: #ff8e66; font-size: 2.2rem; margin: 0; letter-spacing: 5px; text-shadow: 0 0 15px rgba(255, 100, 50, 0.4); }
+
+        /* 第二層：介紹區 */
+        .zodiac-intro { display: flex; align-items: center; gap: 30px; }
+        .symbol-large { font-size: 5rem; color: #ff8e66; filter: drop-shadow(0 0 12px rgba(255, 100, 50, 0.5)); }
+
+        /* 第三層：隨機每日運勢 */
+        .fortune-section h2 { text-align: center; margin: 20px 0; font-size: 1.4rem; color: #ff9a9a; }
+        .fortune-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .fortune-item { background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.3s; }
+        .fortune-item:hover { border-color: #ff8e66; transform: translateY(-3px); }
+        .fortune-item h3 { color: #ff8e66; margin-top: 0; font-size: 1.1rem; }
+
+        /* 第四層：深度分析區 */
+        .detail-analysis { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
+        .analysis-block h3 { color: #ff9a9a; border-left: 4px solid #ff9a9a; padding-left: 15px; margin-top: 0; }
+        .analysis-block ul { list-style: none; padding: 0; }
+        .analysis-block li { margin-bottom: 15px; line-height: 1.7; color: #e0e0e0; }
+        .analysis-block b { color: #ff8e66; }
+
+        @media (max-width: 600px) {
+            .zodiac-intro { flex-direction: column; text-align: center; }
+            .fortune-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="magic-canvas"></canvas>
+
+    <div class="container">
+        <nav class="back-nav">
+            <a href="javascript:history.back()" class="back-btn">← 返回</a>
+        </nav>
+
+        <header class="glass-card zodiac-header">
+            <h1>白羊座 ARIES</h1>
+            <p style="color: #aaa; margin-top: 10px;">3月21日 － 4月19日</p>
+        </header>
+
+        <section class="glass-card zodiac-intro">
+            <div class="symbol-large">♈</div>
+            <div class="intro-text">
+                <p>白羊座是黃道十二宮的第一個星座，火象星座的領頭羊。象徵著新生、勇氣與源源不絕的活力。</p>
+            </div>
+        </section>
+
+        <section class="fortune-section">
+            <h2 id="fortune-date">正在連結火星軌道...</h2>
+            <div class="fortune-grid">
+                <div class="fortune-item"><h3>🧭 衝刺指南</h3><p id="f-travel">正在感應...</p></div>
+                <div class="fortune-item"><h3>❤️ 激情運勢</h3><p id="f-love">正在解讀...</p></div>
+                <div class="fortune-item"><h3>🔥 能量狀態</h3><p id="f-health">正在檢測...</p></div>
+                <div class="fortune-item"><h3>🍀 燃燒元素</h3><p id="f-luck">正在讀取...</p></div>
+            </div>
+        </section>
+
+        <section class="glass-card detail-analysis">
+            <div class="analysis-block">
+                <h3>白羊座核心特質</h3>
+                <ul>
+                    <li><b>開拓與衝勁：</b> 作為黃道之首，白羊擁有強烈的開創精神，凡事先做了再說，無所畏懼。</li>
+                    <li><b>守護星：火星：</b> 這讓白羊充滿戰鬥力與競爭心，喜歡在挑戰中獲得成就感。</li>
+                    <li><b>純真坦率：</b> 性格直來直往，沒有城府，喜怒哀樂都寫在臉上，像個大孩子。</li>
+                </ul>
+            </div>
+            <div class="analysis-block">
+                <h3>優點與缺點</h3>
+                <ul>
+                    <li><b>優點：</b> 勇氣十足、慷慨大方、積極主動、生命力旺盛、充滿正義感。</li>
+                    <li><b>缺點：</b> 沒耐性、衝動行事、脾氣火爆、有時過於自我中心。</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // --- 特效 PART 1: 游標拖曳尾跡 (白羊版：火焰色) ---
+        const canvas = document.getElementById('magic-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        let clickRipples = [];
+        let mouse = { x: -100, y: -100 };
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX; mouse.y = e.clientY;
+            for (let i = 0; i < 3; i++) particles.push(new Particle(mouse.x, mouse.y));
+        });
+
+        window.addEventListener('click', (e) => {
+            clickRipples.push(new Ripple(e.clientX, e.clientY));
+            for(let i=0; i<6; i++) particles.push(new Particle(e.clientX, e.clientY, true));
+        });
+
+        class Particle {
+            constructor(x, y, isClickStar = false) {
+                this.x = x; this.y = y;
+                this.isClickStar = isClickStar;
+                // 主要是紅、橙、金三色 (火星之火)
+                const hue = isClickStar ? 10 : (Math.random() < 0.7 ? 20 : 45); 
+                this.color = `hsla(${hue}, 100%, 65%, `; 
+                this.size = isClickStar ? Math.random() * 4 + 2 : Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * (isClickStar ? 4 : 1.5);
+                this.speedY = isClickStar ? (Math.random() * -3 - 1) : (Math.random() * -1 - 0.2);
+                this.life = 1;
+                this.decay = isClickStar ? 0.015 : Math.random() * 0.02 + 0.01;
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY;
+                if(this.isClickStar) { this.speedX *= 0.98; this.speedY *= 0.98; }
+                this.life -= this.decay;
+                if(this.life < 0) this.life = 0;
+            }
+            draw() {
+                ctx.globalCompositeOperation = 'lighter';
+                ctx.fillStyle = this.color + this.life + ')';
+                ctx.shadowBlur = this.isClickStar ? 10 : 5;
+                ctx.shadowColor = this.color + '0.5)';
+                ctx.beginPath();
+                if(this.isClickStar) { this.drawStar(ctx, this.x, this.y, 4, this.size, this.size/2); } 
+                else { ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); }
+                ctx.fill();
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.shadowBlur = 0;
+            }
+            drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
+                let rot = Math.PI/2*3; let x=cx; let y=cy; let step=Math.PI/spikes;
+                ctx.beginPath(); ctx.moveTo(cx, cy-outerRadius)
+                for(let i=0;i<spikes;i++){
+                    x=cx+Math.cos(rot)*outerRadius; y=cy+Math.sin(rot)*outerRadius; ctx.lineTo(x,y); rot+=step;
+                    x=cx+Math.cos(rot)*innerRadius; y=cy+Math.sin(rot)*innerRadius; ctx.lineTo(x,y); rot+=step;
+                }
+                ctx.lineTo(cx, cy-outerRadius); ctx.closePath();
+            }
+        }
+
+        class Ripple {
+            constructor(x, y) {
+                this.x = x; this.y = y; this.radius = 1; this.maxRadius = 60;
+                this.color = 'hsla(10, 100%, 60%, '; this.life = 1; this.decay = 0.03;
+            }
+            update() { this.radius += (this.maxRadius-this.radius)*0.1; this.life -= this.decay; }
+            draw() {
+                ctx.strokeStyle = this.color + this.life + ')'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2); ctx.stroke();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = particles.length-1; i>=0; i--) {
+                particles[i].update(); particles[i].draw();
+                if (particles[i].life <= 0) particles.splice(i, 1);
+            }
+            for (let i = clickRipples.length-1; i>=0; i--) {
+                clickRipples[i].update(); clickRipples[i].draw();
+                if (clickRipples[i].life <= 0) clickRipples.splice(i, 1);
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- 特效 PART 2: 每日運勢 (針對白羊修改) ---
+        const fortuneData = {
+            travel: ["今天適合快速決策，行動力會帶來好消息。", "適合健身房或戶外跑步，流汗能強化正能量。", "適合去運動用品店走走，紅色配件是你的幸運色。", "向東方前行會遇到讓你熱血沸騰的事務。", "今日適合開拓新路線，別走老路。"],
+            love: ["熱情度爆表，今天適合主動告白或邀約。", "感情生活充滿驚喜，大膽表達你的愛意吧！", "單身者在運動場或職場競爭中容易吸引目光。", "今天適合共同挑戰新事物，感情會迅速升溫。"],
+            health: ["體力充沛，適合高強度訓練。", "注意頭部疲勞，工作之餘做個眼部按摩。", "注意不要過度衝刺，適時補充水分與維他命。", "火氣較旺，多吃涼性水果平衡能量。"],
+            luck: ["烈焰紅 / 運動水壺", "活力橙 / 太陽眼鏡", "熔岩金 / 帥氣皮衣", "金屬銀 / 無線耳機", "珊瑚紅 / 擴香石"]
+        };
+
+        function initFortune() {
+            const now = new Date();
+            const year = now.getUTCFullYear(); const month = now.getUTCMonth(); const date = now.getUTCDate();
+            const seed = year * 10000 + (month + 1) * 100 + date;
+            const getSeeded = (max, offset) => {
+                const x = Math.sin(seed + offset) * 10000;
+                return Math.floor((x - Math.floor(x)) * max);
+            };
+            document.getElementById('f-travel').innerText = fortuneData.travel[getSeeded(fortuneData.travel.length, 1)];
+            document.getElementById('f-love').innerText = fortuneData.love[getSeeded(fortuneData.love.length, 2)];
+            document.getElementById('f-health').innerText = fortuneData.health[getSeeded(fortuneData.health.length, 3)];
+            const [color, item] = fortuneData.luck[getSeeded(fortuneData.luck.length, 4)].split(' / ');
+            document.getElementById('f-luck').innerHTML = `幸運色：${color}<br>幸運物：${item}`;
+            document.getElementById('fortune-date').innerText = `每日運勢 (UTC基準) - ${year}.${String(month+1).padStart(2,'0')}.${String(date).padStart(2,'0')}`;
+        }
+        window.addEventListener('load', initFortune);
+    </script>
+</body>
+</html>

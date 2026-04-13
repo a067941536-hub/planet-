@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>水瓶座詳解 - 魔幻占星</title>
+    <style>
+        /* --- 1. 全域背景與佈局 (水瓶座主題：電光藍與未來感) --- */
+        body {
+            background-color: #050a1a; /* 極深靛藍背景 */
+            margin: 0;
+            padding: 40px 20px;
+            font-family: 'Segoe UI', "Microsoft JhengHei", sans-serif;
+            color: #e0f7fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            cursor: crosshair; 
+        }
+
+        #magic-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            position: relative;
+            z-index: 1; 
+        }
+
+        /* 返回按鈕 */
+        .back-nav { width: 100%; display: flex; justify-content: flex-start; margin-bottom: 5px; }
+        .back-btn {
+            text-decoration: none;
+            color: #00e5ff;
+            font-size: 13px;
+            padding: 6px 14px;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.5);
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .back-btn:hover { background: rgba(0, 229, 255, 0.3); box-shadow: 0 0 15px rgba(0, 229, 255, 0.6); }
+
+        /* 通用玻璃擬態卡片 */
+        .glass-card {
+            background: rgba(10, 25, 45, 0.6); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        /* 第一層：標題區 */
+        .zodiac-header { text-align: center; border: 1.5px solid rgba(0, 229, 255, 0.3); }
+        .zodiac-header h1 { color: #00e5ff; font-size: 2.2rem; margin: 0; letter-spacing: 8px; text-shadow: 0 0 20px rgba(0, 229, 255, 0.6); }
+
+        /* 第二層：介紹區 */
+        .zodiac-intro { display: flex; align-items: center; gap: 30px; }
+        .symbol-large { font-size: 5rem; color: #00e5ff; filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.8)); }
+
+        /* 第三層：隨機每日運勢 */
+        .fortune-section h2 { text-align: center; margin: 20px 0; font-size: 1.4rem; color: #80deea; }
+        .fortune-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .fortune-item { background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.3s; }
+        .fortune-item:hover { border-color: #00e5ff; transform: translateY(-3px); }
+        .fortune-item h3 { color: #00e5ff; margin-top: 0; font-size: 1.1rem; }
+
+        /* 第四層：深度分析區 */
+        .detail-analysis { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
+        .analysis-block h3 { color: #80deea; border-left: 4px solid #00e5ff; padding-left: 15px; margin-top: 0; }
+        .analysis-block ul { list-style: none; padding: 0; }
+        .analysis-block li { margin-bottom: 15px; line-height: 1.7; color: #b2ebf2; }
+        .analysis-block b { color: #00e5ff; }
+
+        @media (max-width: 600px) {
+            .zodiac-intro { flex-direction: column; text-align: center; }
+            .fortune-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="magic-canvas"></canvas>
+
+    <div class="container">
+        <nav class="back-nav">
+            <a href="javascript:history.back()" class="back-btn">← 返回列表</a>
+        </nav>
+
+        <header class="glass-card zodiac-header">
+            <h1>水瓶座 AQUARIUS</h1>
+            <p style="color: #4dd0e1; margin-top: 10px;">1月20日 － 2月18日</p>
+        </header>
+
+        <section class="glass-card zodiac-intro">
+            <div class="symbol-large">♒</div>
+            <div class="intro-text">
+                <p>水瓶座是風象星座，由象徵變革的天王星守護。代表著獨立、博愛、原創性以及不畏挑戰傳統的精神。</p>
+            </div>
+        </section>
+
+        <section class="fortune-section">
+            <h2 id="fortune-date">正在同步量子頻率...</h2>
+            <div class="fortune-grid">
+                <div class="fortune-item"><h3>🚀 創新靈感</h3><p id="f-travel">正在感應...</p></div>
+                <div class="fortune-item"><h3>🌌 自由共鳴</h3><p id="f-love">正在解讀...</p></div>
+                <div class="fortune-item"><h3>🔋 能量場</h3><p id="f-health">正在檢測...</p></div>
+                <div class="fortune-item"><h3>💎 異次元元素</h3><p id="f-luck">正在讀取...</p></div>
+            </div>
+        </section>
+
+        <section class="glass-card detail-analysis">
+            <div class="analysis-block">
+                <h3>水瓶座核心特質</h3>
+                <ul>
+                    <li><b>獨立且獨特：</b> 拒絕平庸，擁有一套與眾不同的價值觀，非常重視個人自由。</li>
+                    <li><b>邏輯與客觀：</b> 擅長以理性的角度看待世俗，是出色的觀察者與改革者。</li>
+                    <li><b>博愛精神：</b> 關心社會議題，熱愛分享新知，對待朋友一視同仁且慷慨。</li>
+                </ul>
+            </div>
+            <div class="analysis-block">
+                <h3>優點與缺點</h3>
+                <ul>
+                    <li><b>優點：</b> 創意無限、思維前衛、求知慾強、樂於助人、心胸開闊。</li>
+                    <li><b>缺點：</b> 過於理想化、有時顯得冷淡、難以捉摸、不按牌理出牌。</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // --- 特效 PART 1: 游標拖曳尾跡 (水瓶版：電光粒子) ---
+        const canvas = document.getElementById('magic-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [], clickRipples = [], mouse = { x: -100, y: -100 };
+
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX; mouse.y = e.clientY;
+            for (let i = 0; i < 3; i++) particles.push(new Particle(mouse.x, mouse.y));
+        });
+
+        window.addEventListener('click', (e) => {
+            clickRipples.push(new Ripple(e.clientX, e.clientY));
+            for(let i=0; i<10; i++) particles.push(new Particle(e.clientX, e.clientY, true));
+        });
+
+        class Particle {
+            constructor(x, y, isClick = false) {
+                this.x = x; this.y = y; this.isClick = isClick;
+                const hue = isClick ? 180 : (Math.random() > 0.5 ? 190 : 280); 
+                this.color = `hsla(${hue}, 100%, 60%, `; 
+                this.size = isClick ? Math.random() * 3 + 1 : Math.random() * 1.5 + 0.5;
+                this.vx = (Math.random() - 0.5) * (isClick ? 8 : 2);
+                this.vy = (Math.random() - 0.5) * (isClick ? 8 : 2);
+                this.life = 1; this.decay = isClick ? 0.015 : 0.02;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                this.life -= this.decay; if(this.life < 0) this.life = 0;
+            }
+            draw() {
+                ctx.fillStyle = this.color + this.life + ')';
+                ctx.beginPath();
+                ctx.rect(this.x, this.y, this.size, this.size); // 方塊粒子更有科技感
+                ctx.fill();
+            }
+        }
+
+        class Ripple {
+            constructor(x, y) {
+                this.x = x; this.y = y; this.radius = 1; this.maxRadius = 80;
+                this.life = 1; this.decay = 0.03;
+            }
+            update() { this.radius += (this.maxRadius-this.radius)*0.1; this.life -= this.decay; }
+            draw() {
+                ctx.strokeStyle = `rgba(0, 229, 255, ${this.life})`; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2); ctx.stroke();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles = particles.filter(p => p.life > 0);
+            particles.forEach(p => { p.update(); p.draw(); });
+            clickRipples = clickRipples.filter(r => r.life > 0);
+            clickRipples.forEach(r => { r.update(); r.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- 特效 PART 2: 每日運勢 (針對水瓶修改) ---
+        const fortuneData = {
+            travel: ["今天適合接觸新科技或學習程式邏輯。", "嘗試用全新的觀點解決老問題，驚喜就在轉角。", "適合參加社群聚會，交流前衛的想法。", "今日靈感爆發，適合進行腦力激盪。", "去科技展或藝術展，讓思維跨界碰撞。"],
+            love: ["感情中需要彼此獨立的空間，尊重對方的奇思妙想。", "單身者可能在共同興趣圈遇到志同道合的人。", "比起激情，你今天更傾向於尋求精神層面的共鳴。", "適合與伴侶一起規劃未來的藍圖。"],
+            health: ["注意小腿與腳踝的負擔，多做拉伸。", "減少電子產品使用時間，保護眼睛與大腦。", "適合嘗試非傳統的放鬆方式，如音療或斷食。", "多補充水分，維持身體能量循環。"],
+            luck: ["電光藍 / 無線藍牙耳機", "星空紫 / 科技感金屬配件", "透明色 / 玻璃水瓶", "銀灰色 / 智能手錶", "螢光綠 / 創意貼紙"]
+        };
+
+        function initFortune() {
+            const now = new Date();
+            const year = now.getUTCFullYear(); const month = now.getUTCMonth(); const date = now.getUTCDate();
+            const seed = year * 10000 + (month + 1) * 100 + date;
+            const getSeeded = (max, offset) => {
+                const x = Math.sin(seed + offset) * 10000;
+                return Math.floor((x - Math.floor(x)) * max);
+            };
+            document.getElementById('f-travel').innerText = fortuneData.travel[getSeeded(fortuneData.travel.length, 1)];
+            document.getElementById('f-love').innerText = fortuneData.love[getSeeded(fortuneData.love.length, 2)];
+            document.getElementById('f-health').innerText = fortuneData.health[getSeeded(fortuneData.health.length, 3)];
+            const [color, item] = fortuneData.luck[getSeeded(fortuneData.luck.length, 4)].split(' / ');
+            document.getElementById('f-luck').innerHTML = `幸運色：${color}<br>幸運物：${item}`;
+            document.getElementById('fortune-date').innerText = `量子讀取日 (UTC) - ${year}.${String(month+1).padStart(2,'0')}.${String(date).padStart(2,'0')}`;
+        }
+        window.addEventListener('load', initFortune);
+    </script>
+</body>
+</html>

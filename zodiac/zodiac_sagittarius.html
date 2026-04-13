@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>射手座詳解 - 魔幻占星</title>
+    <style>
+        /* --- 1. 全域背景與佈局 (射手座主題：星空藍與冒險橘) --- */
+        body {
+            background-color: #050515; /* 深邃星空藍背景 */
+            margin: 0;
+            padding: 40px 20px;
+            font-family: 'Segoe UI', "Microsoft JhengHei", sans-serif;
+            color: #fff3e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            cursor: crosshair; 
+        }
+
+        #magic-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            position: relative;
+            z-index: 1; 
+        }
+
+        /* 返回按鈕 */
+        .back-nav { width: 100%; display: flex; justify-content: flex-start; margin-bottom: 5px; }
+        .back-btn {
+            text-decoration: none;
+            color: #ffb74d;
+            font-size: 13px;
+            padding: 6px 14px;
+            background: rgba(255, 183, 77, 0.1);
+            border: 1px solid rgba(255, 183, 77, 0.5);
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .back-btn:hover { background: rgba(255, 183, 77, 0.3); box-shadow: 0 0 10px rgba(255, 183, 77, 0.5); }
+
+        /* 通用玻璃擬態卡片 */
+        .glass-card {
+            background: rgba(30, 20, 60, 0.4); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 183, 77, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        /* 第一層：標題區 */
+        .zodiac-header { text-align: center; border: 1.5px solid rgba(255, 183, 77, 0.3); }
+        .zodiac-header h1 { color: #ffb74d; font-size: 2.2rem; margin: 0; letter-spacing: 8px; text-shadow: 0 0 15px rgba(255, 183, 77, 0.6); }
+
+        /* 第二層：介紹區 */
+        .zodiac-intro { display: flex; align-items: center; gap: 30px; }
+        .symbol-large { font-size: 5rem; color: #ffb74d; filter: drop-shadow(0 0 15px rgba(255, 183, 77, 0.7)); }
+
+        /* 第三層：隨機每日運勢 */
+        .fortune-section h2 { text-align: center; margin: 20px 0; font-size: 1.4rem; color: #ffe0b2; }
+        .fortune-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .fortune-item { background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.3s; }
+        .fortune-item:hover { border-color: #ffb74d; transform: scale(1.02); }
+        .fortune-item h3 { color: #ffb74d; margin-top: 0; font-size: 1.1rem; }
+
+        /* 第四層：深度分析區 */
+        .detail-analysis { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
+        .analysis-block h3 { color: #ffb74d; border-left: 4px solid #ffb74d; padding-left: 15px; margin-top: 0; }
+        .analysis-block ul { list-style: none; padding: 0; }
+        .analysis-block li { margin-bottom: 15px; line-height: 1.7; color: #ffe0b2; }
+        .analysis-block b { color: #fff; }
+
+        @media (max-width: 600px) {
+            .zodiac-intro { flex-direction: column; text-align: center; }
+            .fortune-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="magic-canvas"></canvas>
+
+    <div class="container">
+        <nav class="back-nav">
+            <a href="index.html" class="back-btn">← 返回列表</a>
+        </nav>
+
+        <header class="glass-card zodiac-header">
+            <h1>射手座 SAGITTARIUS</h1>
+            <p style="color: #ffa726; margin-top: 10px;">11月22日 － 12月21日</p>
+        </header>
+
+        <section class="glass-card zodiac-intro">
+            <div class="symbol-large">🏹</div>
+            <div class="intro-text">
+                <p>射手座是火象星座，受木星守護。代表著對知識的渴望、樂觀的天性，以及永遠在追逐下一場壯闊冒險的靈魂。</p>
+            </div>
+        </section>
+
+        <section class="fortune-section">
+            <h2 id="fortune-date">正在鎖定冒險座標...</h2>
+            <div class="fortune-grid">
+                <div class="fortune-item"><h3>🗺️ 探索指南</h3><p id="f-travel">正在感應...</p></div>
+                <div class="fortune-item"><h3>🔥 熱情脈動</h3><p id="f-love">正在解讀...</p></div>
+                <div class="fortune-item"><h3>🏹 直覺能量</h3><p id="f-health">正在檢測...</p></div>
+                <div class="fortune-item"><h3>🧭 幸運羅盤</h3><p id="f-luck">正在讀取...</p></div>
+            </div>
+        </section>
+
+        <section class="glass-card detail-analysis">
+            <div class="analysis-block">
+                <h3>射手座核心特質</h3>
+                <ul>
+                    <li><b>熱愛自由：</b> 討厭受束縛，無論是身體還是思想，都需要廣闊的空間去奔跑。</li>
+                    <li><b>哲學家思維：</b> 不僅僅是冒險，更喜歡思考人生的意義，對新事物保持極高的開放度。</li>
+                    <li><b>天生樂觀：</b> 即使遇到困難也能相信明天會更好，這種能量極具感染力。</li>
+                </ul>
+            </div>
+            <div class="analysis-block">
+                <h3>優點與缺點</h3>
+                <ul>
+                    <li><b>優點：</b> 坦率真誠、幽默風趣、具備國際觀、行動力強。</li>
+                    <li><b>缺點：</b> 粗心大意、有時太過直接而傷人、缺乏耐心、過於理想化。</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // --- 特效 PART 1: 游標拖曳尾跡 (射手版：流星軌跡) ---
+        const canvas = document.getElementById('magic-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [], mouse = { x: -100, y: -100 };
+
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX; mouse.y = e.clientY;
+            for (let i = 0; i < 3; i++) particles.push(new Particle(mouse.x, mouse.y));
+        });
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                this.color = `hsla(${Math.random() * 40 + 10}, 100%, 70%, `; // 橘黃色系
+                this.size = Math.random() * 3 + 1;
+                this.vx = (Math.random() - 0.5) * 4;
+                this.vy = (Math.random() - 0.5) * 4;
+                this.life = 1; this.decay = 0.02;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                this.life -= this.decay; if(this.life < 0) this.life = 0;
+            }
+            draw() {
+                ctx.fillStyle = this.color + this.life + ')';
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles = particles.filter(p => p.life > 0);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- 特效 PART 2: 每日運勢 ---
+        const fortuneData = {
+            travel: ["今天適合出門走走，即興的輕旅行會帶來意想不到的靈感。", "嘗試去一個沒去過的餐廳，新口味能開啟你的好心情。", "非常適合規劃下一場長途旅行，地圖是你的好夥伴。", "保持開放心態，外來的訊息可能藏著關鍵機會。"],
+            love: ["直覺非常敏銳，大膽表達你的真實感受吧！", "單身者可能在學習新事物的場合遇到有趣的人。", "與伴侶一起嘗試冒險運動或遊戲，能讓感情升溫。", "幽默感是你今天最強大的社交武器。"],
+            health: ["能量滿滿，適合戶外運動或挑戰體力極限。", "注意大腿與臀部的放鬆，避免過度運動造成的痠痛。", "多呼吸新鮮空氣，自然的能量能淨化你的思緒。", "心靈的自由就是最好的健康補給。"],
+            luck: ["亮橘色 / 運動水瓶", "海軍藍 / 護照夾", "亮紫色 / 太陽眼鏡", "原木色 / 鑰匙圈", "金色 / 指南針標記"]
+        };
+
+        function initFortune() {
+            const now = new Date();
+            const year = now.getUTCFullYear(); const month = now.getUTCMonth(); const date = now.getUTCDate();
+            const seed = year * 10000 + (month + 1) * 100 + date;
+            const getSeeded = (max, offset) => {
+                const x = Math.sin(seed + offset) * 10000;
+                return Math.floor((x - Math.floor(x)) * max);
+            };
+            document.getElementById('f-travel').innerText = fortuneData.travel[getSeeded(fortuneData.travel.length, 1)];
+            document.getElementById('f-love').innerText = fortuneData.love[getSeeded(fortuneData.love.length, 2)];
+            document.getElementById('f-health').innerText = fortuneData.health[getSeeded(fortuneData.health.length, 3)];
+            const [color, item] = fortuneData.luck[getSeeded(fortuneData.luck.length, 4)].split(' / ');
+            document.getElementById('f-luck').innerHTML = `幸運色：${color}<br>幸運物：${item}`;
+            document.getElementById('fortune-date').innerText = `自由觀測日 (UTC) - ${year}.${String(month+1).padStart(2,'0')}.${String(date).padStart(2,'0')}`;
+        }
+        window.addEventListener('load', initFortune);
+    </script>
+</body>
+</html>

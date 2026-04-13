@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天蠍座詳解 - 魔幻占星</title>
+    <style>
+        /* --- 1. 全域背景與佈局校正 --- */
+        body {
+            background-color: #0a0515; /* 深紫黑背景 */
+            margin: 0;
+            padding: 40px 20px;
+            font-family: 'Segoe UI', "Microsoft JhengHei", sans-serif;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 水平居中 */
+            min-height: 100vh;
+            position: relative;
+            /* 隱藏原本的游標，改用我們自訂的圖示 (選用) */
+            cursor: crosshair; 
+        }
+
+        /* --- 2. 畫布設定 (核心特效層) --- */
+        #magic-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* 讓畫布不擋住下方的點擊 */
+            z-index: 9999; /* 確保特效在最上層 */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            position: relative; /* 確保內容在畫布下方 */
+            z-index: 1; 
+        }
+
+        /* 返回按鈕 [參考截圖 image_5748ec.jpg 風格] */
+        .back-nav { width: 100%; display: flex; justify-content: flex-start; margin-bottom: 5px; }
+        .back-btn {
+            text-decoration: none;
+            color: #4da3ff;
+            font-size: 13px;
+            padding: 6px 14px;
+            background: rgba(77, 163, 255, 0.1);
+            border: 1px solid rgba(77, 163, 255, 0.5);
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .back-btn:hover { background: rgba(77, 163, 255, 0.3); box-shadow: 0 0 10px rgba(77, 163, 255, 0.5); }
+
+        /* 通用玻璃擬態卡片 */
+        .glass-card {
+            background: rgba(40, 20, 70, 0.4); /* 半透明紫色 */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(191, 119, 246, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        /* 第一層：標題區 */
+        .zodiac-header { text-align: center; border: 1.5px solid rgba(255, 204, 102, 0.3); }
+        .zodiac-header h1 { color: #ffcc66; font-size: 2.2rem; margin: 0; letter-spacing: 5px; text-shadow: 0 0 15px rgba(255, 204, 102, 0.4); }
+
+        /* 第二層：介紹區 */
+        .zodiac-intro { display: flex; align-items: center; gap: 30px; }
+        .symbol-large { font-size: 5rem; color: #ffcc66; filter: drop-shadow(0 0 12px rgba(255, 204, 102, 0.5)); }
+
+        /* 第三層：隨機每日運勢 (UTC 基準) */
+        .fortune-section h2 { text-align: center; margin: 20px 0; font-size: 1.4rem; color: #d1a3f9; }
+        .fortune-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .fortune-item { background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.3s; }
+        .fortune-item:hover { border-color: #ffcc66; transform: translateY(-3px); }
+        .fortune-item h3 { color: #ffcc66; margin-top: 0; font-size: 1.1rem; }
+
+        /* 第四層：深度分析區 [參考 image_c8ea2f.png 資料] */
+        .detail-analysis { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
+        .analysis-block h3 { color: #d1a3f9; border-left: 4px solid #d1a3f9; padding-left: 15px; margin-top: 0; }
+        .analysis-block ul { list-style: none; padding: 0; }
+        .analysis-block li { margin-bottom: 15px; line-height: 1.7; color: #e0e0e0; }
+        .analysis-block b { color: #ffcc66; }
+
+        /* 手機版適應：單欄排版並保持居中 */
+        @media (max-width: 600px) {
+            .zodiac-intro { flex-direction: column; text-align: center; }
+            .fortune-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="magic-canvas"></canvas>
+
+    <div class="container">
+        <nav class="back-nav">
+            <a href="javascript:history.back()" class="back-btn">← 返回</a>
+        </nav>
+
+        <header class="glass-card zodiac-header">
+            <h1>天蠍座 SCORPIO</h1>
+            <p style="color: #aaa; margin-top: 10px;">10月24日 － 11月22日</p>
+        </header>
+
+        <section class="glass-card zodiac-intro">
+            <div class="symbol-large">♏</div>
+            <div class="intro-text">
+                <p>天蠍座是水象星座，以深情、直覺敏銳、洞察力強及神秘感著稱。</p>
+            </div>
+        </section>
+
+        <section class="fortune-section">
+            <h2 id="fortune-date">正在連結星軌...</h2>
+            <div class="fortune-grid">
+                <div class="fortune-item"><h3>🧭 外出指南</h3><p id="f-travel">正在感應...</p></div>
+                <div class="fortune-item"><h3>💜 感情運勢</h3><p id="f-love">正在解讀...</p></div>
+                <div class="fortune-item"><h3>✨ 健康狀態</h3><p id="f-health">正在檢測...</p></div>
+                <div class="fortune-item"><h3>🍀 幸運元素</h3><p id="f-luck">正在讀取...</p></div>
+            </div>
+        </section>
+
+        <section class="glass-card detail-analysis">
+            <div class="analysis-block">
+                <h3>天蠍座核心特質</h3>
+                <ul>
+                    <li><b>日期與象徵：</b> 代表著深沉、轉化與重生的能量，守護星為火星與冥王星。</li>
+                    <li><b>深沉的洞察力：</b> 擁有極強的直覺，能看穿他人的動機，常能一語道破真相。</li>
+                    <li><b>堅定與執著：</b> 擁有「不認輸」的精神，即使在谷底也能再次站起來。</li>
+                </ul>
+            </div>
+            <div class="analysis-block">
+                <h3>優點與缺點</h3>
+                <ul>
+                    <li><b>優點：</b> 忠誠、直覺敏銳、獨立、冷靜自制、對朋友熱心。</li>
+                    <li><b>缺點：</b> 隱祕、多疑、佔有慾強、容易記仇、壓抑情緒。</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // ==========================================
+        // --- 特效 PART 1: 游標拖曳尾跡 & 點擊效果 ---
+        // ==========================================
+        const canvas = document.getElementById('magic-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        let clickRipples = [];
+
+        // 滑鼠位置
+        let mouse = { x: -100, y: -100 };
+
+        // 初始化畫布大小
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // 監聽滑鼠移動：產生尾跡粒子
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            
+            // 每次移動產生 2-4 個金色星塵粒子
+            for (let i = 0; i < 3; i++) {
+                particles.push(new Particle(mouse.x, mouse.y));
+            }
+        });
+
+        // 監聽滑鼠點擊：產生擴散光環 & 星星
+        window.addEventListener('click', (e) => {
+            // 產生星雲光環
+            clickRipples.push(new Ripple(e.clientX, e.clientY));
+            
+            // 產生 5-8 顆上升的星星
+            for(let i=0; i<6; i++) {
+                particles.push(new Particle(e.clientX, e.clientY, true)); // true 代表是點擊產生的星星
+            }
+        });
+
+        // --- 粒子類別 (星塵/星星) ---
+        class Particle {
+            constructor(x, y, isClickStar = false) {
+                this.x = x;
+                this.y = y;
+                this.isClickStar = isClickStar;
+                
+                // 金色/淺紫色色調
+                const hue = isClickStar ? 280 : (Math.random() < 0.8 ? 50 : 280); // 點擊是紫，移動大多是金
+                this.color = `hsla(${hue}, 90%, 70%, `; 
+                
+                // 物理屬性
+                this.size = isClickStar ? Math.random() * 4 + 2 : Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * (isClickStar ? 4 : 1.5);
+                this.speedY = isClickStar ? (Math.random() * -3 - 1) : (Math.random() * -1 - 0.2); // 點擊向上衝
+                
+                // 生命週期
+                this.life = 1;
+                this.decay = isClickStar ? 0.015 : Math.random() * 0.02 + 0.01;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                // 點擊星星會慢慢減速
+                if(this.isClickStar) {
+                    this.speedX *= 0.98;
+                    this.speedY *= 0.98;
+                }
+                
+                this.life -= this.decay;
+                if(this.life < 0) this.life = 0;
+            }
+
+            draw() {
+                ctx.globalCompositeOperation = 'lighter'; // 讓粒子相疊時發光
+                ctx.fillStyle = this.color + this.life + ')';
+                ctx.shadowBlur = this.isClickStar ? 10 : 5;
+                ctx.shadowColor = this.color + '0.5)';
+                
+                ctx.beginPath();
+                if(this.isClickStar) {
+                    // 繪製四角星形 (選用)
+                    this.drawStar(ctx, this.x, this.y, 4, this.size, this.size/2);
+                } else {
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                }
+                ctx.fill();
+                ctx.globalCompositeOperation = 'source-over'; // 恢復正常模式
+                ctx.shadowBlur = 0;
+            }
+            
+            // 繪製多角星函數
+            drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
+                let rot = Math.PI / 2 * 3;
+                let x = cx;
+                let y = cy;
+                let step = Math.PI / spikes;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy - outerRadius)
+                for (let i = 0; i < spikes; i++) {
+                    x = cx + Math.cos(rot) * outerRadius;
+                    y = cy + Math.sin(rot) * outerRadius;
+                    ctx.lineTo(x, y)
+                    rot += step
+                    x = cx + Math.cos(rot) * innerRadius;
+                    y = cy + Math.sin(rot) * innerRadius;
+                    ctx.lineTo(x, y)
+                    rot += step
+                }
+                ctx.lineTo(cx, cy - outerRadius)
+                ctx.closePath();
+            }
+        }
+
+        // --- 點擊擴散光環類別 ---
+        class Ripple {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = 1;
+                this.maxRadius = 60;
+                this.color = 'hsla(280, 90%, 60%, '; // 淺紫色星雲色
+                this.life = 1;
+                this.decay = 0.03;
+            }
+            update() {
+                this.radius += (this.maxRadius - this.radius) * 0.1;
+                this.life -= this.decay;
+                if(this.life < 0) this.life = 0;
+            }
+            draw() {
+                ctx.strokeStyle = this.color + this.life + ')';
+                ctx.lineWidth = 2;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color + '0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        // --- 動畫主迴圈 ---
+        function animate() {
+            ctx.clearRect(0, 0, width, height); // 清空畫布
+
+            // 處理尾跡粒子
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+            
+            // 處理點擊光環
+            for (let i = clickRipples.length - 1; i >= 0; i--) {
+                clickRipples[i].update();
+                clickRipples[i].draw();
+                if (clickRipples[i].life <= 0) {
+                    clickRipples.splice(i, 1);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+
+        // ==========================================
+        // --- 特效 PART 2: 每日運勢隨機 (UTC 基準) ---
+        // ==========================================
+        const fortuneData = {
+            travel: ["適合前往水源地，藍色配件能提升偏財運。", "多接近大自然，森林芬多精能淨化磁場。", "建議待在安靜室內，午後熱茶帶來靈感。", "往北走會有貴人相助。", "適合與老友聚會。", "觀賞星空能帶來啟示。"],
+            love: ["桃花運極佳，今天適合參與社交聚會。", "單身者可能在意外場合遇到志同道合的人。", "感情穩定，適合與伴侶共同規劃未來旅行。", "今天適合深入溝通，把藏在心裡的話溫柔地說出來。", "一位老朋友可能會帶來情感的新消息。"],
+            health: ["能量飽滿，適合戶外運動或核心訓練。", "注意睡眠品質，晚間適合進行冥想或溫和拉伸。", "注意眼睛疲勞，每用電腦一小時請起身看看遠方。", "腸胃系統較為敏感，建議今日飲食以清淡為主。", "多補充水分，你的身體正在呼喚純淨能量。"],
+            luck: ["星雲紫 / 水晶原石", "月光銀 / 手寫筆記本", "玫瑰金 / 薰衣草香氛", "深海藍 / 古銅鑰匙", "琥珀橘 / 星象儀", "極光綠 / 羅盤"]
+        };
+
+        function initFortune() {
+            // 1. 取得格林威治 UTC 時間
+            const now = new Date();
+            const year = now.getUTCFullYear();
+            const month = now.getUTCMonth();
+            const date = now.getUTCDate();
+            
+            // 2. 建立日期種子
+            const seed = year * 10000 + (month + 1) * 100 + date;
+
+            // 3. 偽隨機函數
+            const getSeeded = (max, offset) => {
+                const x = Math.sin(seed + offset) * 10000;
+                return Math.floor((x - Math.floor(x)) * max);
+            };
+
+            // 4. 更新 DOM 內容
+            document.getElementById('f-travel').innerText = fortuneData.travel[getSeeded(fortuneData.travel.length, 1)];
+            document.getElementById('f-love').innerText = fortuneData.love[getSeeded(fortuneData.love.length, 2)];
+            document.getElementById('f-health').innerText = fortuneData.health[getSeeded(fortuneData.health.length, 3)];
+            
+            const [color, item] = fortuneData.luck[getSeeded(fortuneData.luck.length, 4)].split(' / ');
+            document.getElementById('f-luck').innerHTML = `幸運色：${color}<br>幸運物：${item}`;
+
+            // 5. 更新日期標題
+            const dateStr = `${year}.${String(month + 1).padStart(2, '0')}.${String(date).padStart(2, '0')}`;
+            document.getElementById('fortune-date').innerText = `每日運勢 (UTC基準) - ${dateStr}`;
+        }
+
+        // 網頁載入後執行特效初始化
+        window.addEventListener('load', () => {
+            initFortune();
+        });
+    </script>
+</body>
+</html>

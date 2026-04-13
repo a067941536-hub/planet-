@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="planetstyle.css">
+    <title>天王星看光光 :D</title>
+    <link rel="icon" type="image/png" href="../images/planet_uranus.png">
+    <style>
+        /* 天王星淡青色與冰晶視覺 */
+        body {
+            background: radial-gradient(circle at center, #1a3c40 0%, #050a0a 100%);
+            color: #e0f7f9;
+            overflow-x: hidden;
+            margin: 0;
+            cursor: crosshair;
+        }
+
+        #effect-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        main {
+            position: relative;
+            z-index: 10;
+            max-width: 950px;
+            margin: 40px auto;
+            background: rgba(20, 50, 60, 0.6);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 40px;
+            border: 1px solid rgba(175, 238, 238, 0.2);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+        }
+
+        /* 圖片視覺優化：強制圓形與平滑放大 */
+        .planet-visual {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+
+        .planet-visual a {
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .planet-visual img {
+            width: 280px;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 50%; /* 強制圓形 */
+            filter: drop-shadow(0 0 40px rgba(175, 238, 238, 0.4));
+            
+            /* 平滑放大動態特效 */
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.6s ease;
+        }
+
+        /* 觸發放大效果 */
+        .planet-visual a:hover img {
+            transform: scale(1.12);
+            filter: drop-shadow(0 0 60px rgba(175, 238, 238, 0.6)) brightness(1.1);
+        }
+
+        .back-link {
+            color: #afeeee;
+            text-decoration: none;
+            font-size: 0.95rem;
+            margin-right: 20px;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            color: #fff;
+            text-shadow: 0 0 10px #afeeee;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 25px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(175, 238, 238, 0.1); }
+        th { color: #afeeee; width: 30%; }
+
+        h2 { border-left: 4px solid #afeeee; padding-left: 15px; margin-top: 30px; color: #afeeee; }
+        .uranus-highlight { color: #e0ffff; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <canvas id="effect-canvas"></canvas>
+
+    <header style="text-align: center; padding: 50px 20px;">
+        <h1 style="font-size: 3rem; color: #fff; text-shadow: 0 0 20px rgba(175, 238, 238, 0.5);">探索天王星</h1>
+        <div style="margin-top: 15px;">
+            <a href="../SEplanets.html" class="back-link">← 返回星球選擇</a>
+            <a href="../jdiagram.html" class="back-link">← 太陽系動態圖</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="planet-visual">
+            <a href="https://solarsystem.nasa.gov/gltf_embed/2344/" target="_blank" title="查看天王星 3D 模型">
+                <img src="../images/planet_uranus.png" alt="天王星的影像">
+            </a>
+            <p style="color: #6a8a8a; font-size: 0.8rem; margin-top: 15px;">(點擊圖片開啟 NASA 3D 互動模型)</p>
+        </section>
+
+        <section class="planet-facts">
+            <h2>💎 基本概覽</h2>
+            <table>
+                <tr>
+                    <th>類型</th>
+                    <td>冰巨行星 (類木行星)</td>
+                </tr>
+                <tr>
+                    <th>平均直徑</th>
+                    <td>約 50,724 km (地球的 4 倍)</td>
+                </tr>
+                <tr>
+                    <th>軌道距離</th>
+                    <td>約 19.2 AU</td>
+                </tr>
+                <tr>
+                    <th>發現年份</th>
+                    <td><span class="uranus-highlight">1781 年</span> (首顆由望遠鏡發現的行星)</td>
+                </tr>
+                <tr>
+                    <th>自轉特性</th>
+                    <td>
+                        <p>自轉軸傾斜約 <span class="uranus-highlight">98 度</span></p>
+                        <p>它是「躺著」繞太陽公轉的星球。</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>公轉週期</th>
+                    <td>約 84 地球年 (約 30,681 天)</td>
+                </tr>
+                <tr>
+                    <th>大氣成分</th>
+                    <td>氫、氦、甲烷 (甲烷吸收紅光使其呈現藍綠色)</td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="planet-description">
+            <h2>🔍 關於 天王星 (Uranus)</h2>
+            <p>
+                天王星是太陽系中大氣層溫度最低的行星，最低可達攝氏零下 224 度。與木星和土星不同，它的內部主要由冰（水、氨、甲烷）組成，而非液態金屬氫，因此被分類為<b>「冰巨行星」</b>。
+            </p>
+            <p>
+                在地科學習中，天王星最著名的就是它極端的傾斜角。這可能是因為早期受到大型天體撞擊所致。這種傾斜導致了它極端的季節變化——每一極都會經歷 42 年的持續日照與 42 年的黑暗。
+            </p>
+        </section>
+    </main>
+
+    <footer style="text-align: center; padding: 50px; color: #507070;">
+        <p>&copy; 宇宙探索資料中心 | 2026</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('effect-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class IceCrystal {
+            constructor(x, y, isClick = false) {
+                this.x = x; this.y = y;
+                this.life = 1;
+                this.size = isClick ? Math.random() * 5 + 2 : Math.random() * 1.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * (isClick ? 7 : 1.5);
+                this.speedY = (Math.random() - 0.5) * (isClick ? 7 : 1.5);
+                // 天王星色系：淡青、白、淡藍
+                const colors = ['175, 238, 238', '224, 255, 255', '135, 206, 235'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            update() { this.x += this.speedX; this.y += this.speedY; this.life -= 0.015; }
+            draw() {
+                ctx.fillStyle = `rgba(${this.color}, ${this.life})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.5) particles.push(new IceCrystal(e.clientX, e.clientY));
+        });
+
+        window.addEventListener('click', (e) => {
+            for(let i=0; i<15; i++) particles.push(new IceCrystal(e.clientX, e.clientY, true));
+        });
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles = particles.filter(p => p.life > 0);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>

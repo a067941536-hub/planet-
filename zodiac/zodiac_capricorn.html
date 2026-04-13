@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>摩羯座詳解 - 魔幻占星</title>
+    <style>
+        /* --- 1. 全域背景與佈局 (摩羯座主題：岩層灰與深林綠) --- */
+        body {
+            background-color: #0d0f0e; /* 極深苔蘚黑 */
+            margin: 0;
+            padding: 40px 20px;
+            font-family: 'Segoe UI', "Microsoft JhengHei", sans-serif;
+            color: #d1d1d1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            cursor: crosshair; 
+        }
+
+        #magic-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            position: relative;
+            z-index: 1; 
+        }
+
+        /* 返回按鈕 */
+        .back-nav { width: 100%; display: flex; justify-content: flex-start; margin-bottom: 5px; }
+        .back-btn {
+            text-decoration: none;
+            color: #a0a0a0;
+            font-size: 13px;
+            padding: 6px 14px;
+            background: rgba(160, 160, 160, 0.1);
+            border: 1px solid rgba(160, 160, 160, 0.5);
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .back-btn:hover { background: rgba(160, 160, 160, 0.3); box-shadow: 0 0 10px rgba(160, 160, 160, 0.5); }
+
+        /* 通用玻璃擬態卡片 (摩羯版：厚重質感) */
+        .glass-card {
+            background: rgba(30, 35, 30, 0.5); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        /* 第一層：標題區 */
+        .zodiac-header { text-align: center; border: 1.5px solid rgba(139, 126, 102, 0.3); }
+        .zodiac-header h1 { color: #e0e0e0; font-size: 2.2rem; margin: 0; letter-spacing: 8px; text-shadow: 0 0 15px rgba(255, 255, 255, 0.2); }
+
+        /* 第二層：介紹區 */
+        .zodiac-intro { display: flex; align-items: center; gap: 30px; }
+        .symbol-large { font-size: 5rem; color: #8d6e63; filter: drop-shadow(0 0 12px rgba(141, 110, 99, 0.4)); }
+
+        /* 第三層：隨機每日運勢 */
+        .fortune-section h2 { text-align: center; margin: 20px 0; font-size: 1.4rem; color: #bcaaa4; }
+        .fortune-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .fortune-item { background: rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.3s; }
+        .fortune-item:hover { border-color: #8d6e63; transform: translateY(-3px); }
+        .fortune-item h3 { color: #bcaaa4; margin-top: 0; font-size: 1.1rem; }
+
+        /* 第四層：深度分析區 */
+        .detail-analysis { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
+        .analysis-block h3 { color: #a1887f; border-left: 4px solid #8d6e63; padding-left: 15px; margin-top: 0; }
+        .analysis-block ul { list-style: none; padding: 0; }
+        .analysis-block li { margin-bottom: 15px; line-height: 1.7; color: #bdbdbd; }
+        .analysis-block b { color: #d7ccc8; }
+
+        @media (max-width: 600px) {
+            .zodiac-intro { flex-direction: column; text-align: center; }
+            .fortune-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="magic-canvas"></canvas>
+
+    <div class="container">
+        <nav class="back-nav">
+            <a href="index.html" class="back-btn">← 返回列表</a>
+        </nav>
+
+        <header class="glass-card zodiac-header">
+            <h1>摩羯座 CAPRICORN</h1>
+            <p style="color: #888; margin-top: 10px;">12月22日 － 1月19日</p>
+        </header>
+
+        <section class="glass-card zodiac-intro">
+            <div class="symbol-large">♑</div>
+            <div class="intro-text">
+                <p>摩羯座是土象星座，受土星守護。象徵著堅忍不拔的意志、高度的責任感，以及為了達成目標而不斷攀登的精神。</p>
+            </div>
+        </section>
+
+        <section class="fortune-section">
+            <h2 id="fortune-date">正在評估登頂路徑...</h2>
+            <div class="fortune-grid">
+                <div class="fortune-item"><h3>💼 事業藍圖</h3><p id="f-travel">正在感應...</p></div>
+                <div class="fortune-item"><h3>🏔️ 穩健防線</h3><p id="f-love">正在解讀...</p></div>
+                <div class="fortune-item"><h3>🧱 基石能量</h3><p id="f-health">正在檢測...</p></div>
+                <div class="fortune-item"><h3>🏛️ 古典元素</h3><p id="f-luck">正在讀取...</p></div>
+            </div>
+        </section>
+
+        <section class="glass-card detail-analysis">
+            <div class="analysis-block">
+                <h3>摩羯座核心特質</h3>
+                <ul>
+                    <li><b>務實的野心家：</b> 不做白日夢，喜歡制定詳盡的計畫並一步一腳印地去執行。</li>
+                    <li><b>極高的自律：</b> 擁有驚人的耐力與自控力，即使環境艱難也能堅持到底。</li>
+                    <li><b>傳統與可靠：</b> 重視秩序與經驗，是朋友與家人心中最穩定的靠山。</li>
+                </ul>
+            </div>
+            <div class="analysis-block">
+                <h3>優點與缺點</h3>
+                <ul>
+                    <li><b>優點：</b> 腳踏實地、深謀遠慮、忠誠不二、具備領導潛力。</li>
+                    <li><b>缺點：</b> 有時過於壓抑情感、顯得嚴肅刻板、容易給自己太大的壓力。</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // --- 特效 PART 1: 游標拖曳尾跡 (摩羯版：穩重的碎石光) ---
+        const canvas = document.getElementById('magic-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [], mouse = { x: -100, y: -100 };
+
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX; mouse.y = e.clientY;
+            for (let i = 0; i < 2; i++) particles.push(new Particle(mouse.x, mouse.y));
+        });
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                // 摩羯色系：岩灰色、深咖、暗金
+                this.color = `rgba(141, 110, 99, `; 
+                this.size = Math.random() * 2 + 1;
+                this.vx = (Math.random() - 0.5) * 1;
+                this.vy = Math.random() * 1 + 0.5; // 粒子有種下沉的重量感
+                this.life = 1; this.decay = 0.015;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                this.life -= this.decay; if(this.life < 0) this.life = 0;
+            }
+            draw() {
+                ctx.fillStyle = this.color + this.life + ')';
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles = particles.filter(p => p.life > 0);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- 特效 PART 2: 每日運勢 (針對摩羯修改) ---
+        const fortuneData = {
+            travel: ["今天適合處理繁瑣的行政事務，你的耐心正處於高峰。", "長期計畫適合在此時進行微調，穩紮穩打是關鍵。", "適合與前輩或長官交流，你專業的態度會被看見。", "投資理財建議以穩健為主，不宜冒進。"],
+            love: ["比起浪漫的承諾，實際的陪伴與分擔更能打動你的心。", "感情穩定發展，適合討論關於未來的嚴肅話題。", "單身者可能在職場中遇到價值觀契合的可靠對象。", "對自己好一點，偶爾的放鬆不會讓計畫崩潰。"],
+            health: ["注意骨骼與牙齒的保養，適時補充鈣質。", "長期埋頭苦幹容易累積壓力，建議多做背部伸展。", "多喝溫水，保持規律的作息是維持效率的基石。", "注意膝蓋的保護，運動不宜過量。"],
+            luck: ["岩石灰 / 皮革公事包", "古銅色 / 機械錶", "深林綠 / 質感鋼筆", "沉穩黑 / 簡約筆記本", "琥珀色 / 陶瓷茶杯"]
+        };
+
+        function initFortune() {
+            const now = new Date();
+            const year = now.getUTCFullYear(); const month = now.getUTCMonth(); const date = now.getUTCDate();
+            const seed = year * 10000 + (month + 1) * 100 + date;
+            const getSeeded = (max, offset) => {
+                const x = Math.sin(seed + offset) * 10000;
+                return Math.floor((x - Math.floor(x)) * max);
+            };
+            document.getElementById('f-travel').innerText = fortuneData.travel[getSeeded(fortuneData.travel.length, 1)];
+            document.getElementById('f-love').innerText = fortuneData.love[getSeeded(fortuneData.love.length, 2)];
+            document.getElementById('f-health').innerText = fortuneData.health[getSeeded(fortuneData.health.length, 3)];
+            const [color, item] = fortuneData.luck[getSeeded(fortuneData.luck.length, 4)].split(' / ');
+            document.getElementById('f-luck').innerHTML = `幸運色：${color}<br>幸運物：${item}`;
+            document.getElementById('fortune-date').innerText = `年度評估日 (UTC) - ${year}.${String(month+1).padStart(2,'0')}.${String(date).padStart(2,'0')}`;
+        }
+        window.addEventListener('load', initFortune);
+    </script>
+</body>
+</html>

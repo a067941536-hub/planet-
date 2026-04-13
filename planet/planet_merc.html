@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="planetstyle.css">
+    <title>水星看光光 :D</title>
+    <link rel="icon" type="image/png" href="../images/merc.png">
+    <style>
+        /* 核心設計：深邃灰階宇宙 */
+        body {
+            background: radial-gradient(circle at center, #1e1e1e 0%, #050505 100%);
+            color: #d1d1d1;
+            overflow-x: hidden;
+            margin: 0;
+            cursor: crosshair;
+        }
+
+        #effect-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        main {
+            position: relative;
+            z-index: 10;
+            max-width: 900px;
+            margin: 40px auto;
+            background: rgba(40, 40, 40, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 25px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+        }
+
+        /* 修正：圖片放大特效 */
+        .planet-visual {
+            text-align: center;
+            margin-bottom: 30px;
+            /* 確保放大時不會被切掉 */
+            padding: 20px; 
+        }
+
+        .planet-visual a {
+            display: inline-block; /* 讓連結包裹住圖片，方便變形 */
+            text-decoration: none;
+        }
+
+        .planet-visual img {
+            width: 240px;
+            border-radius: 50%;
+            /* 關鍵：設定轉換屬性 */
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.5s ease;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.1));
+        }
+
+        /* 當滑鼠移到連結或圖片上時放大 */
+        .planet-visual a:hover img {
+            transform: scale(1.15); /* 放大 1.15 倍 */
+            filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.4)) brightness(1.1);
+        }
+
+        .back-link {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.95rem;
+            margin-right: 20px;
+            transition: 0.3s;
+        }
+
+        .back-link:hover { color: #fff; text-shadow: 0 0 8px #fff; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 25px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        th { color: #fff; width: 35%; }
+        
+        h2 { border-left: 4px solid #fff; padding-left: 15px; margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+    <canvas id="effect-canvas"></canvas>
+
+    <header style="text-align: center; padding: 50px 20px;">
+        <h1 style="font-size: 2.8rem; letter-spacing: 2px;">探索水星</h1>
+        <div style="margin-top: 10px;">
+            <a href="../SEplanets.html" class="back-link">← 返回星球選擇</a>
+            <a href="../jdiagram.html" class="back-link">← 太陽系動態圖</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="planet-visual">
+            <a href="https://solarsystem.nasa.gov/gltf_embed/2369/" target="_blank">
+                <img src="../images/merc.png" alt="水星的影像">
+            </a>
+            <p style="color: #666; font-size: 0.8rem; margin-top: 15px;">(點擊圖片開啟 3D 模型視窗)</p>
+        </section>
+
+        <section class="planet-facts">
+            <h2>🌑 基本概覽</h2>
+            <table>
+                <tr>
+                    <th>類型</th>
+                    <td>類地行星</td>
+                </tr>
+                <tr>
+                    <th>平均直徑</th>
+                    <td>約 4,879 km (太陽系最小)</td>
+                </tr>
+                <tr>
+                    <th>軌道距離</th>
+                    <td>約 0.39 AU (離太陽最近)</td>
+                </tr>
+                <tr>
+                    <th>自轉週期</th>
+                    <td>約 58.6 地球日</td>
+                </tr>
+                <tr>
+                    <th>公轉週期</th>
+                    <td>約 88 地球日</td>
+                </tr>
+                <tr>
+                    <th>表面溫度</th>
+                    <td>-180°C 至 430°C (極端溫差)</td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="planet-description">
+            <h2>🔍 關於 水星 (Mercury)</h2>
+            <p>
+                水星是太陽系中體積最小且最接近太陽的行星。因為離太陽太近，它的大氣層幾乎被太陽風吹散，這導致它無法保存熱量，產生了劇烈的晝夜溫差。
+            </p>
+            <p>
+                在地科學習中，水星最著名的特徵是其佈滿隕石坑的表面（類似月球）以及極高的公轉速度。它是內太陽系中密度第二高的行星，擁有一個巨大的金屬核心。
+            </p>
+        </section>
+    </main>
+
+    <footer style="text-align: center; padding: 50px; color: #444;">
+        <p>&copy; 宇宙探索資料中心 | 2026</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('effect-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class MercuryDust {
+            constructor(x, y, isClick = false) {
+                this.x = x; this.y = y;
+                this.life = 1;
+                this.size = isClick ? Math.random() * 4 + 2 : Math.random() * 1.5;
+                this.speedX = (Math.random() - 0.5) * (isClick ? 8 : 2);
+                this.speedY = (Math.random() - 0.5) * (isClick ? 8 : 2);
+                this.color = '200, 200, 200';
+            }
+            update() { this.x += this.speedX; this.y += this.speedY; this.life -= 0.02; }
+            draw() {
+                ctx.fillStyle = `rgba(${this.color}, ${this.life})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.5) particles.push(new MercuryDust(e.clientX, e.clientY));
+        });
+
+        window.addEventListener('click', (e) => {
+            for(let i=0; i<12; i++) particles.push(new MercuryDust(e.clientX, e.clientY, true));
+        });
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles = particles.filter(p => p.life > 0);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>

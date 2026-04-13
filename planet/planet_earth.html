@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="planetstyle.css">
+    <link rel="icon" type="image/png" href="../images/earth.png">
+    <title>地球看光光 :D</title>
+    <style>
+        /* 重新設計：地球背景視覺 */
+        body {
+            background: radial-gradient(circle at center, #0d1b3e 0%, #050a15 100%);
+            color: #f0f0f0;
+            overflow-x: hidden;
+            margin: 0;
+            cursor: crosshair;
+        }
+
+        #effect-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        main {
+            position: relative;
+            z-index: 10;
+            max-width: 950px;
+            margin: 40px auto;
+            background: rgba(10, 20, 50, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 25px;
+            padding: 40px;
+            border: 1px solid rgba(102, 179, 255, 0.2);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .planet-visual {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .planet-visual img {
+            width: 280px;
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(102, 179, 255, 0.4);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .planet-visual img:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .back-link {
+            color: #66b3ff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            margin-right: 20px;
+            border-bottom: 1px solid transparent;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            color: #fff;
+            border-bottom: 1px solid #fff;
+            text-shadow: 0 0 8px #66b3ff;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 25px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(102, 179, 255, 0.1); }
+        th { color: #66b3ff; font-weight: 600; width: 35%; }
+        
+        h2 { border-left: 4px solid #66b3ff; padding-left: 15px; margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+    <canvas id="effect-canvas"></canvas>
+
+    <header style="text-align: center; padding: 50px 20px;">
+        <h1 style="font-size: 3rem; text-shadow: 0 0 20px rgba(102, 179, 255, 0.5);">探索地球</h1>
+        <div style="margin-top: 15px;">
+            <a href="../SEplanets.html" class="back-link">← 返回星球選擇</a>
+            <a href="../jdiagram.html" class="back-link">← 太陽系動態圖</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="planet-visual">
+            <a href="https://earth.google.com/web/" target="_blank" title="點擊進入 Google Earth 探索">
+                <img src="../images/Theearth.png" alt="地球的影像">
+            </a>
+            <p style="color: #888; font-size: 0.8rem; margin-top: 10px;">(點擊影像開啟 Google Earth 實境)</p>
+        </section>
+
+        <section class="planet-facts">
+            <h2>🌍 基本概覽</h2>
+            <table>
+                <tr>
+                    <th>類型</th>
+                    <td>類地行星 (岩石行星)</td>
+                </tr>
+                <tr>
+                    <th>平均直徑</th>
+                    <td>約 12,742 km</td>
+                </tr>
+                <tr>
+                    <th>繞行座標</th>
+                    <td>繞行太陽 (距離 1 AU) / 隨太陽系繞行銀河中心</td>
+                </tr>
+                <tr>
+                    <th>誕生時間</th>
+                    <td>約 45.4 億年前</td>
+                </tr>
+                <tr>
+                    <th>自轉週期</th>
+                    <td>23小時 56分 4秒 (恆星日)</td>
+                </tr>
+                <tr>
+                    <th>衛星</th>
+                    <td>1 個 (月球)</td>
+                </tr>
+                <tr>
+                    <th>表面組成</th>
+                    <td>71% 海洋、29% 陸地</td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="planet-description">
+            <h2>🔍 關於 地球 (Earth)</h2>
+            <p>
+                地球是太陽系中唯一已知擁有生命的星球。它位於太陽系的<b>適居帶</b>內，
+                液態水的存在與適當的大氣厚度，為生物提供了完美的生存條件。
+            </p>
+            <p>
+                我們不僅以每秒約 30 公里的速度繞著太陽公轉，整個太陽系更以每秒約 220 公里的速度繞著<b>銀河系中心</b>旋轉。
+                這意味著地球繞完銀河系一圈（稱為一個銀河年）大約需要 2.25 億至 2.5 億年。
+            </p>
+        </section>
+    </main>
+
+    <footer style="text-align: center; padding: 50px; color: #556688;">
+        <p>&copy; 宇宙探索資料中心 | 守護藍色彈珠計畫</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('effect-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class StarParticle {
+            constructor(x, y, isClick = false) {
+                this.x = x; this.y = y;
+                this.life = 1;
+                this.size = isClick ? Math.random() * 5 + 2 : Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * (isClick ? 8 : 2);
+                this.speedY = (Math.random() - 0.5) * (isClick ? 8 : 2);
+                // 地球色系：翠藍、亮白
+                this.color = isClick ? '255, 255, 255' : '100, 200, 255';
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life -= 0.015;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(${this.color}, ${this.life})`;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = `rgba(${this.color}, 0.5)`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            particles.push(new StarParticle(e.clientX, e.clientY));
+        });
+
+        window.addEventListener('click', (e) => {
+            for(let i=0; i<12; i++) particles.push(new StarParticle(e.clientX, e.clientY, true));
+        });
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles = particles.filter(p => p.life > 0);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
