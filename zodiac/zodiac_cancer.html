@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>巨蟹座詳解 - 魔幻占星</title>
     <style>
-        /* --- 1. 全域背景與佈局校正 (巨蟹座主題：月光銀與深海藍) --- */
+        /* --- 1. 全域背景與佈局 (巨蟹座主題：月光銀與深海藍) --- */
         body {
-            background-color: #050a15; /* 深海黑藍背景 */
+            background-color: #050a15; 
             margin: 0;
             padding: 40px 20px;
             font-family: 'Segoe UI', "Microsoft JhengHei", sans-serif;
@@ -17,7 +17,17 @@
             align-items: center;
             min-height: 100vh;
             position: relative;
-            cursor: crosshair; 
+            cursor: crosshair;
+            overflow-x: hidden;
+        }
+
+        /* 營造深海月光的環境感 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 100%, #0a1a3a 0%, #050a15 100%);
+            z-index: -1;
         }
 
         #magic-canvas {
@@ -42,47 +52,48 @@
         .back-nav { width: 100%; display: flex; justify-content: flex-start; margin-bottom: 5px; }
         .back-btn {
             text-decoration: none;
-            color: #e0e0e0;
+            color: #b0c4de;
             font-size: 13px;
-            padding: 6px 14px;
-            background: rgba(224, 224, 224, 0.1);
-            border: 1px solid rgba(224, 224, 224, 0.5);
+            padding: 8px 16px;
+            background: rgba(176, 196, 222, 0.1);
+            border: 1px solid rgba(176, 196, 222, 0.4);
             border-radius: 4px;
             transition: 0.3s;
         }
-        .back-btn:hover { background: rgba(224, 224, 224, 0.3); box-shadow: 0 0 10px rgba(224, 224, 224, 0.5); }
+        .back-btn:hover { background: rgba(176, 196, 222, 0.25); box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); }
 
-        /* 通用玻璃擬態卡片 */
+        /* 玻璃擬態卡片 - 月光冷調 */
         .glass-card {
-            background: rgba(30, 45, 70, 0.4); /* 半透明月光藍 */
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(200, 220, 255, 0.2);
+            background: rgba(15, 25, 45, 0.6); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 20px;
             padding: 30px;
             box-sizing: border-box;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
         }
 
         /* 第一層：標題區 */
-        .zodiac-header { text-align: center; border: 1.5px solid rgba(224, 224, 224, 0.3); }
-        .zodiac-header h1 { color: #f5f5f5; font-size: 2.2rem; margin: 0; letter-spacing: 5px; text-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
+        .zodiac-header { text-align: center; border-color: rgba(255, 255, 255, 0.2); }
+        .zodiac-header h1 { color: #f8f8ff; font-size: 2.2rem; margin: 0; letter-spacing: 5px; text-shadow: 0 0 15px rgba(255, 255, 255, 0.3); }
 
         /* 第二層：介紹區 */
         .zodiac-intro { display: flex; align-items: center; gap: 30px; }
-        .symbol-large { font-size: 5rem; color: #f5f5f5; filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.5)); }
+        .symbol-large { font-size: 5rem; color: #f0f8ff; filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.4)); }
 
         /* 第三層：隨機每日運勢 */
         .fortune-section h2 { text-align: center; margin: 20px 0; font-size: 1.4rem; color: #a5c3ff; }
         .fortune-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .fortune-item { background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.3s; }
-        .fortune-item:hover { border-color: #f5f5f5; transform: translateY(-3px); }
-        .fortune-item h3 { color: #f5f5f5; margin-top: 0; font-size: 1.1rem; }
+        .fortune-item { background: rgba(255, 255, 255, 0.03); border-radius: 15px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.08); transition: 0.3s; }
+        .fortune-item:hover { border-color: #a5c3ff; transform: translateY(-3px); background: rgba(165, 195, 255, 0.05); }
+        .fortune-item h3 { color: #a5c3ff; margin-top: 0; font-size: 1.1rem; }
 
         /* 第四層：深度分析區 */
         .detail-analysis { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
         .analysis-block h3 { color: #a5c3ff; border-left: 4px solid #a5c3ff; padding-left: 15px; margin-top: 0; }
         .analysis-block ul { list-style: none; padding: 0; }
-        .analysis-block li { margin-bottom: 15px; line-height: 1.7; color: #e0e0e0; }
+        .analysis-block li { margin-bottom: 15px; line-height: 1.7; color: #d0d0e0; }
         .analysis-block b { color: #f5f5f5; }
 
         @media (max-width: 600px) {
@@ -134,15 +145,15 @@
             <div class="analysis-block">
                 <h3>優點與缺點</h3>
                 <ul>
-                    <li><b>優點：</b> 體貼周到、忠於愛情、想像力豐富、直覺敏銳、具備母性光輝。</li>
-                    <li><b>缺點：</b> 過度敏感、情緒起伏大、有時過於防衛或憂鬱、難以割捨過去。</li>
+                    <li><b>優點：</b> 體貼周到、忠於愛情、想像力豐富、直覺敏銳、具備溫柔包容力。</li>
+                    <li><b>缺點：</b> 過度敏感、情緒起伏大、難以割捨過去、有時過於防衛。</li>
                 </ul>
             </div>
         </section>
     </div>
 
     <script>
-        // --- 特效 PART 1: 游標拖曳尾跡 (巨蟹版：珍珠白與柔和藍) ---
+        // --- 特效 PART 1: 粒子系統 (珍珠感粒子) ---
         const canvas = document.getElementById('magic-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, particles = [], clickRipples = [], mouse = { x: -100, y: -100 };
@@ -152,37 +163,36 @@
 
         window.addEventListener('mousemove', (e) => {
             mouse.x = e.clientX; mouse.y = e.clientY;
-            for (let i = 0; i < 3; i++) particles.push(new Particle(mouse.x, mouse.y));
+            for (let i = 0; i < 2; i++) particles.push(new Particle(mouse.x, mouse.y));
         });
 
         window.addEventListener('click', (e) => {
             clickRipples.push(new Ripple(e.clientX, e.clientY));
-            for(let i=0; i<6; i++) particles.push(new Particle(e.clientX, e.clientY, true));
+            for(let i=0; i<8; i++) particles.push(new Particle(e.clientX, e.clientY, true));
         });
 
         class Particle {
-            constructor(x, y, isClickStar = false) {
-                this.x = x; this.y = y; this.isClickStar = isClickStar;
-                // 巨蟹色系：珍珠白、月光色、柔藍
-                const hue = isClickStar ? 210 : (Math.random() < 0.7 ? 190 : 220); 
-                const lightness = isClickStar ? '90%' : '80%';
-                this.color = `hsla(${hue}, 40%, ${lightness}, `; 
-                this.size = isClickStar ? Math.random() * 5 + 2 : Math.random() * 3 + 0.5;
-                this.speedX = (Math.random() - 0.5) * (isClickStar ? 3 : 1);
-                this.speedY = isClickStar ? (Math.random() * -2 - 0.5) : (Math.random() * 0.5); // 像緩慢沉降或浮動
-                this.life = 1; this.decay = isClickStar ? 0.01 : Math.random() * 0.015 + 0.005;
+            constructor(x, y, isClick = false) {
+                this.x = x; this.y = y; this.isClick = isClick;
+                // 巨蟹色系：粉藍、珍珠白、銀灰
+                const hue = isClick ? 200 : (Math.random() > 0.5 ? 210 : 180); 
+                this.color = `hsla(${hue}, 30%, ${isClick ? '95%' : '85%'}, `; 
+                this.size = isClick ? Math.random() * 4 + 2 : Math.random() * 2.5 + 0.5;
+                // 速度較慢，模擬水中浮動
+                this.vx = (Math.random() - 0.5) * (isClick ? 5 : 1.2);
+                this.vy = isClick ? (Math.random() - 0.5) * 5 : (Math.random() * 0.5 + 0.2); 
+                this.life = 1; this.decay = isClick ? 0.01 : 0.008;
             }
             update() {
-                this.x += this.speedX; this.y += this.speedY;
-                this.life -= this.decay; if(this.life < 0) this.life = 0;
+                this.x += this.vx; this.y += this.vy;
+                this.life -= this.decay;
             }
             draw() {
+                if (this.life <= 0) return;
                 ctx.globalCompositeOperation = 'lighter';
                 ctx.fillStyle = this.color + this.life + ')';
                 ctx.beginPath();
-                if(this.isClickStar) {
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); // 圓潤如珍珠
-                } else { ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); }
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.globalCompositeOperation = 'source-over';
             }
@@ -191,11 +201,12 @@
         class Ripple {
             constructor(x, y) {
                 this.x = x; this.y = y; this.radius = 1; this.maxRadius = 80;
-                this.color = 'hsla(210, 50%, 80%, '; this.life = 1; this.decay = 0.02;
+                this.life = 1; this.decay = 0.02;
             }
             update() { this.radius += (this.maxRadius-this.radius)*0.08; this.life -= this.decay; }
             draw() {
-                ctx.strokeStyle = this.color + this.life + ')'; ctx.lineWidth = 3;
+                if (this.life <= 0) return;
+                ctx.strokeStyle = `rgba(176, 196, 222, ${this.life * 0.5})`; ctx.lineWidth = 2;
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2); ctx.stroke();
             }
         }
@@ -210,17 +221,17 @@
         }
         animate();
 
-        // --- 特效 PART 2: 每日運勢 (針對巨蟹修改) ---
+        // --- 特效 PART 2: 運勢數據 ---
         const fortuneData = {
-            travel: ["適合待在家中整理空間，環境的整潔能穩定你的情緒。", "適合與家人共進晚餐，分享彼此的心情。", "今天適合去水源地或海邊走走，水分子能淨化磁場。", "適合佈置臥室，換套柔軟的床單會提升幸福感。", "與老朋友視訊通話，懷舊的話題能療癒心靈。"],
-            love: ["情感需求較大，適合向伴侶索取擁抱與安慰。", "單身者可能在老朋友的聚會中發現溫暖的對象。", "感情中適合展現你溫柔照顧的一面，對方會深受感動。", "直覺很準，今天能輕易讀懂對方沒說出口的話。"],
-            health: ["注意胃部與消化系統，飲食建議以清淡溫熱為主。", "情緒對身體影響較大，心情好身體就好。", "適合泡個熱水澡或足浴，釋放累積的壓力。", "多補充含有鈣質的食物，強化身體支撐力。"],
+            travel: ["適合待在家中整理空間，整潔能穩定情緒。", "適合與家人共進晚餐，分享彼此的心情。", "今天適合去水源地走走，水分子能淨化磁場。", "適合佈置臥室，換套柔軟的床單提升幸福感。", "與老朋友視訊通話，懷舊話題能療癒心靈。"],
+            love: ["情感需求較大，適合向伴侶索取溫暖與擁抱。", "單身者可能在老朋友的聚會中發現溫柔對象。", "感情中展現你照顧的一面，對方會深受感動。", "直覺很準，能輕易讀懂對方沒說出口的話。"],
+            health: ["注意胃部與消化系統，飲食建議以溫熱為主。", "情緒對身體影響較大，保持心情愉快是關鍵。", "適合泡個熱水澡或足浴，釋放累積的壓力。", "多補充水分或天然果汁，讓身體維持潤澤。"],
             luck: ["珍珠白 / 貝殼飾品", "月光銀 / 絲質睡衣", "淺海藍 / 香氛蠟燭", "奶油色 / 柔軟抱枕", "銀灰色 / 復古相框"]
         };
 
         function initFortune() {
             const now = new Date();
-            const year = now.getUTCFullYear(); const month = now.getUTCMonth(); const date = now.getUTCDate();
+            const year = now.getFullYear(); const month = now.getMonth(); const date = now.getDate();
             const seed = year * 10000 + (month + 1) * 100 + date;
             const getSeeded = (max, offset) => {
                 const x = Math.sin(seed + offset) * 10000;
@@ -231,7 +242,7 @@
             document.getElementById('f-health').innerText = fortuneData.health[getSeeded(fortuneData.health.length, 3)];
             const [color, item] = fortuneData.luck[getSeeded(fortuneData.luck.length, 4)].split(' / ');
             document.getElementById('f-luck').innerHTML = `幸運色：${color}<br>幸運物：${item}`;
-            document.getElementById('fortune-date').innerText = `每日運勢 (UTC基準) - ${year}.${String(month+1).padStart(2,'0')}.${String(date).padStart(2,'0')}`;
+            document.getElementById('fortune-date').innerText = `每日運勢更新 - ${year}.${String(month+1).padStart(2,'0')}.${String(date).padStart(2,'0')}`;
         }
         window.addEventListener('load', initFortune);
     </script>

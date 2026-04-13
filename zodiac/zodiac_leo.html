@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>獅子座詳解 - 魔幻占星</title>
     <style>
-        /* --- 1. 全域背景與佈局校正 (獅子座主題：金黃與深紫紅) --- */
+        /* --- 1. 全域背景與佈局 (獅子座主題：金黃與深紫紅) --- */
         body {
             background-color: #1a0a05; /* 極深紅黑背景 */
             margin: 0;
@@ -44,38 +44,39 @@
             text-decoration: none;
             color: #ffcc33;
             font-size: 13px;
-            padding: 6px 14px;
+            padding: 8px 16px;
             background: rgba(255, 204, 51, 0.1);
             border: 1px solid rgba(255, 204, 51, 0.5);
             border-radius: 4px;
             transition: 0.3s;
         }
-        .back-btn:hover { background: rgba(255, 204, 51, 0.3); box-shadow: 0 0 10px rgba(255, 204, 51, 0.5); }
+        .back-btn:hover { background: rgba(255, 204, 51, 0.3); box-shadow: 0 0 15px rgba(255, 204, 51, 0.6); }
 
-        /* 通用玻璃擬態卡片 */
+        /* 通用玻璃擬態卡片 (獅子版：華麗感) */
         .glass-card {
-            background: rgba(60, 20, 10, 0.4); /* 半透明夕陽紅 */
+            background: rgba(60, 20, 10, 0.4); 
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 204, 51, 0.2);
             border-radius: 20px;
             padding: 30px;
             box-sizing: border-box;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
         /* 第一層：標題區 */
         .zodiac-header { text-align: center; border: 1.5px solid rgba(255, 204, 51, 0.3); }
-        .zodiac-header h1 { color: #ffcc33; font-size: 2.2rem; margin: 0; letter-spacing: 5px; text-shadow: 0 0 15px rgba(255, 204, 51, 0.6); }
+        .zodiac-header h1 { color: #ffcc33; font-size: 2.2rem; margin: 0; letter-spacing: 5px; text-shadow: 0 0 15px rgba(255, 204, 51, 0.8); }
 
         /* 第二層：介紹區 */
         .zodiac-intro { display: flex; align-items: center; gap: 30px; }
-        .symbol-large { font-size: 5rem; color: #ffcc33; filter: drop-shadow(0 0 12px rgba(255, 204, 51, 0.8)); }
+        .symbol-large { font-size: 5.5rem; color: #ffcc33; filter: drop-shadow(0 0 15px rgba(255, 204, 51, 0.9)); }
 
         /* 第三層：隨機每日運勢 */
         .fortune-section h2 { text-align: center; margin: 20px 0; font-size: 1.4rem; color: #ffd700; }
         .fortune-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .fortune-item { background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.3s; }
-        .fortune-item:hover { border-color: #ffcc33; transform: translateY(-3px); }
+        .fortune-item:hover { border-color: #ffcc33; background: rgba(255, 204, 51, 0.1); transform: translateY(-3px); }
         .fortune-item h3 { color: #ffcc33; margin-top: 0; font-size: 1.1rem; }
 
         /* 第四層：深度分析區 */
@@ -115,9 +116,9 @@
         <section class="fortune-section">
             <h2 id="fortune-date">正在聚焦聚光燈...</h2>
             <div class="fortune-grid">
-                <div class="fortune-item"><h3>👑 榮耀指南</h3><p id="f-travel">正在感應...</p></div>
+                <div class="fortune-item"><h3>👑 榮耀指南</h3><p id="f-glory">正在感應...</p></div>
                 <div class="fortune-item"><h3>🔥 閃耀運勢</h3><p id="f-love">正在解讀...</p></div>
-                <div class="fortune-item"><h3>☀️ 能量充盈</h3><p id="f-health">正在檢測...</p></div>
+                <div class="fortune-item"><h3>☀️ 能量充盈</h3><p id="f-energy">正在檢測...</p></div>
                 <div class="fortune-item"><h3>💎 王者元素</h3><p id="f-luck">正在讀取...</p></div>
             </div>
         </section>
@@ -163,8 +164,7 @@
         class Particle {
             constructor(x, y, isClickStar = false) {
                 this.x = x; this.y = y; this.isClickStar = isClickStar;
-                // 獅子色系：鮮金、橙黃、亮白
-                const hue = isClickStar ? 50 : (Math.random() < 0.8 ? 45 : 20); 
+                const hue = isClickStar ? 50 : (Math.random() < 0.8 ? 45 : 25); 
                 this.color = `hsla(${hue}, 100%, 60%, `; 
                 this.size = isClickStar ? Math.random() * 5 + 3 : Math.random() * 2 + 1;
                 this.speedX = (Math.random() - 0.5) * (isClickStar ? 6 : 2);
@@ -174,12 +174,12 @@
             update() {
                 this.x += this.speedX; this.y += this.speedY;
                 if(this.isClickStar) { this.speedX *= 0.98; this.speedY *= 0.98; }
-                this.life -= this.decay; if(this.life < 0) this.life = 0;
+                this.life -= this.decay;
             }
             draw() {
                 ctx.globalCompositeOperation = 'lighter';
                 ctx.fillStyle = this.color + this.life + ')';
-                ctx.shadowBlur = 15;
+                ctx.shadowBlur = 10 * this.life;
                 ctx.shadowColor = this.color + '0.5)';
                 ctx.beginPath();
                 if(this.isClickStar) {
@@ -187,6 +187,7 @@
                 } else { ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); }
                 ctx.fill();
                 ctx.globalCompositeOperation = 'source-over';
+                ctx.shadowBlur = 0; // 重置防止影響其他繪製
             }
             drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
                 let rot = Math.PI/2*3; let step=Math.PI/spikes;
@@ -201,14 +202,12 @@
 
         class Ripple {
             constructor(x, y) {
-                this.x = x; this.y = y; this.radius = 1; this.maxRadius = 100;
-                this.color = 'hsla(45, 100%, 50%, '; this.life = 1; this.decay = 0.025;
+                this.x = x; this.y = y; this.radius = 1; this.maxRadius = 90;
+                this.color = 'hsla(45, 100%, 50%, '; this.life = 1; this.decay = 0.03;
             }
             update() { this.radius += (this.maxRadius-this.radius)*0.1; this.life -= this.decay; }
             draw() {
-                ctx.strokeStyle = this.color + this.life + ')'; ctx.lineWidth = 4;
-                ctx.shadowBlur = 20;
-                ctx.shadowColor = this.color + '0.3)';
+                ctx.strokeStyle = this.color + this.life + ')'; ctx.lineWidth = 3;
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2); ctx.stroke();
             }
         }
@@ -225,9 +224,9 @@
 
         // --- 特效 PART 2: 每日運勢 (針對獅子修改) ---
         const fortuneData = {
-            travel: ["今天適合主導一場聚會，你的領導力會獲得讚賞。", "穿上明亮的顏色，你的氣場會吸引更多貴人。", "適合去高級商圈或熱鬧地段，能量會隨之提升。", "適合展示你的才華，勇敢站在舞台中心吧。", "參加社交場合，你將成為全場注目的焦點。"],
-            love: ["熱情四射，今天適合大膽對心儀對象展現你的魅力。", "單身者可能在創意活動中遇到讓你眼前一亮的人。", "感情中適合贈送精緻的小禮物，增加生活的儀式感。", "另一半會被你自信的樣子深深吸引。"],
-            health: ["能量滿滿，適合重量訓練或競技性運動。", "注意脊椎與背部的放鬆，姿勢正確才能保持氣場。", "心情開朗是最好的良藥，多笑對心血管有益。", "適合在陽光下走走，感受太陽的直接能量。"],
+            glory: ["今天適合主導聚會，你的領導力會獲得眾人認可。", "穿上明亮的顏色，你的氣場會吸引更多貴人。", "適合處理重要決策，你的自信是成功的關鍵。", "勇敢表達你的想法，你的創意將令人驚艷。"],
+            love: ["熱情四射，今天適合大膽展現你的魅力。", "感情中適合贈送小禮物，增加生活的儀式感。", "單身者可能在社交場合遇到讓你眼前一亮的人。", "另一半會被你自信且慷慨的樣子深深吸引。"],
+            energy: ["能量滿滿，適合重量訓練或任何具備競爭性的運動。", "注意脊椎與背部的放鬆，好的姿勢能維持你的氣場。", "心情開朗是最好的保養，太陽下的散步能補充能量。", "適合進行自我提升的活動，感受生命的充盈。"],
             luck: ["金黃色 / 金色飾品", "夕陽橙 / 向日葵", "烈焰紅 / 質感絲巾", "琥珀色 / 精緻香水", "亮白色 / 太陽眼鏡"]
         };
 
@@ -239,12 +238,12 @@
                 const x = Math.sin(seed + offset) * 10000;
                 return Math.floor((x - Math.floor(x)) * max);
             };
-            document.getElementById('f-travel').innerText = fortuneData.travel[getSeeded(fortuneData.travel.length, 1)];
+            document.getElementById('f-glory').innerText = fortuneData.glory[getSeeded(fortuneData.glory.length, 1)];
             document.getElementById('f-love').innerText = fortuneData.love[getSeeded(fortuneData.love.length, 2)];
-            document.getElementById('f-health').innerText = fortuneData.health[getSeeded(fortuneData.health.length, 3)];
+            document.getElementById('f-energy').innerText = fortuneData.energy[getSeeded(fortuneData.energy.length, 3)];
             const [color, item] = fortuneData.luck[getSeeded(fortuneData.luck.length, 4)].split(' / ');
             document.getElementById('f-luck').innerHTML = `幸運色：${color}<br>幸運物：${item}`;
-            document.getElementById('fortune-date').innerText = `每日運勢 (UTC基準) - ${year}.${String(month+1).padStart(2,'0')}.${String(date).padStart(2,'0')}`;
+            document.getElementById('fortune-date').innerText = `聚光燈時刻 - ${year}.${String(month+1).padStart(2,'0')}.${String(date).padStart(2,'0')}`;
         }
         window.addEventListener('load', initFortune);
     </script>

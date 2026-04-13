@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>水瓶座詳解 - 魔幻占星</title>
     <style>
-        /* --- 1. 全域背景與佈局 (水瓶座主題：電光藍與未來感) --- */
+        /* --- 1. 全域背景與佈局 (水瓶座：電光藍與深邃宇宙) --- */
         body {
-            background-color: #050a1a; /* 極深靛藍背景 */
+            background-color: #050a1a; 
             margin: 0;
             padding: 40px 20px;
             font-family: 'Segoe UI', "Microsoft JhengHei", sans-serif;
@@ -17,7 +17,17 @@
             align-items: center;
             min-height: 100vh;
             position: relative;
-            cursor: crosshair; 
+            cursor: crosshair;
+            overflow-x: hidden;
+        }
+
+        /* 強化背景顏色層次感 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #0a1a35 0%, #050a1a 100%);
+            z-index: -1;
         }
 
         #magic-canvas {
@@ -44,7 +54,7 @@
             text-decoration: none;
             color: #00e5ff;
             font-size: 13px;
-            padding: 6px 14px;
+            padding: 8px 16px;
             background: rgba(0, 229, 255, 0.1);
             border: 1px solid rgba(0, 229, 255, 0.5);
             border-radius: 4px;
@@ -52,19 +62,20 @@
         }
         .back-btn:hover { background: rgba(0, 229, 255, 0.3); box-shadow: 0 0 15px rgba(0, 229, 255, 0.6); }
 
-        /* 通用玻璃擬態卡片 */
+        /* 玻璃擬態卡片 - 增加霓虹邊緣 */
         .glass-card {
-            background: rgba(10, 25, 45, 0.6); 
+            background: rgba(10, 25, 45, 0.65); 
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(0, 229, 255, 0.2);
+            border: 1px solid rgba(0, 229, 255, 0.25);
             border-radius: 20px;
             padding: 30px;
             box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 229, 255, 0.05);
         }
 
         /* 第一層：標題區 */
-        .zodiac-header { text-align: center; border: 1.5px solid rgba(0, 229, 255, 0.3); }
+        .zodiac-header { text-align: center; }
         .zodiac-header h1 { color: #00e5ff; font-size: 2.2rem; margin: 0; letter-spacing: 8px; text-shadow: 0 0 20px rgba(0, 229, 255, 0.6); }
 
         /* 第二層：介紹區 */
@@ -75,7 +86,7 @@
         .fortune-section h2 { text-align: center; margin: 20px 0; font-size: 1.4rem; color: #80deea; }
         .fortune-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .fortune-item { background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.3s; }
-        .fortune-item:hover { border-color: #00e5ff; transform: translateY(-3px); }
+        .fortune-item:hover { border-color: #00e5ff; transform: translateY(-3px); background: rgba(0, 229, 255, 0.05); }
         .fortune-item h3 { color: #00e5ff; margin-top: 0; font-size: 1.1rem; }
 
         /* 第四層：深度分析區 */
@@ -97,7 +108,7 @@
 
     <div class="container">
         <nav class="back-nav">
-            <a href="javascript:history.back()" class="back-btn">← 返回列表</a>
+            <a href="javascript:history.back()" class="back-btn">← 返回</a>
         </nav>
 
         <header class="glass-card zodiac-header">
@@ -118,7 +129,7 @@
                 <div class="fortune-item"><h3>🚀 創新靈感</h3><p id="f-travel">正在感應...</p></div>
                 <div class="fortune-item"><h3>🌌 自由共鳴</h3><p id="f-love">正在解讀...</p></div>
                 <div class="fortune-item"><h3>🔋 能量場</h3><p id="f-health">正在檢測...</p></div>
-                <div class="fortune-item"><h3>💎 異次元元素</h3><p id="f-luck">正在讀取...</p></div>
+                <div class="fortune-item"><h3>💎 幸運組合</h3><p id="f-luck">正在讀取...</p></div>
             </div>
         </section>
 
@@ -142,7 +153,7 @@
     </div>
 
     <script>
-        // --- 特效 PART 1: 游標拖曳尾跡 (水瓶版：電光粒子) ---
+        // --- 特效 PART 1: 粒子系統 ---
         const canvas = document.getElementById('magic-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, particles = [], clickRipples = [], mouse = { x: -100, y: -100 };
@@ -152,44 +163,46 @@
 
         window.addEventListener('mousemove', (e) => {
             mouse.x = e.clientX; mouse.y = e.clientY;
-            for (let i = 0; i < 3; i++) particles.push(new Particle(mouse.x, mouse.y));
+            for (let i = 0; i < 2; i++) particles.push(new Particle(mouse.x, mouse.y));
         });
 
         window.addEventListener('click', (e) => {
             clickRipples.push(new Ripple(e.clientX, e.clientY));
-            for(let i=0; i<10; i++) particles.push(new Particle(e.clientX, e.clientY, true));
+            for(let i=0; i<12; i++) particles.push(new Particle(e.clientX, e.clientY, true));
         });
 
         class Particle {
             constructor(x, y, isClick = false) {
                 this.x = x; this.y = y; this.isClick = isClick;
-                const hue = isClick ? 180 : (Math.random() > 0.5 ? 190 : 280); 
-                this.color = `hsla(${hue}, 100%, 60%, `; 
-                this.size = isClick ? Math.random() * 3 + 1 : Math.random() * 1.5 + 0.5;
-                this.vx = (Math.random() - 0.5) * (isClick ? 8 : 2);
-                this.vy = (Math.random() - 0.5) * (isClick ? 8 : 2);
-                this.life = 1; this.decay = isClick ? 0.015 : 0.02;
+                const hue = isClick ? 180 : (Math.random() > 0.5 ? 190 : 210); 
+                this.color = `hsla(${hue}, 100%, 70%, `; 
+                this.size = isClick ? Math.random() * 4 + 1 : Math.random() * 2 + 0.5;
+                this.vx = (Math.random() - 0.5) * (isClick ? 10 : 2.5);
+                this.vy = (Math.random() - 0.5) * (isClick ? 10 : 2.5);
+                this.life = 1; this.decay = isClick ? 0.012 : 0.018;
             }
             update() {
                 this.x += this.vx; this.y += this.vy;
-                this.life -= this.decay; if(this.life < 0) this.life = 0;
+                this.life -= this.decay;
             }
             draw() {
+                if (this.life <= 0) return;
                 ctx.fillStyle = this.color + this.life + ')';
                 ctx.beginPath();
-                ctx.rect(this.x, this.y, this.size, this.size); // 方塊粒子更有科技感
+                ctx.rect(this.x, this.y, this.size, this.size); 
                 ctx.fill();
             }
         }
 
         class Ripple {
             constructor(x, y) {
-                this.x = x; this.y = y; this.radius = 1; this.maxRadius = 80;
-                this.life = 1; this.decay = 0.03;
+                this.x = x; this.y = y; this.radius = 1; this.maxRadius = 100;
+                this.life = 1; this.decay = 0.025;
             }
-            update() { this.radius += (this.maxRadius-this.radius)*0.1; this.life -= this.decay; }
+            update() { this.radius += (this.maxRadius-this.radius)*0.08; this.life -= this.decay; }
             draw() {
-                ctx.strokeStyle = `rgba(0, 229, 255, ${this.life})`; ctx.lineWidth = 1;
+                if (this.life <= 0) return;
+                ctx.strokeStyle = `rgba(0, 229, 255, ${this.life})`; ctx.lineWidth = 1.5;
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2); ctx.stroke();
             }
         }
@@ -204,17 +217,17 @@
         }
         animate();
 
-        // --- 特效 PART 2: 每日運勢 (針對水瓶修改) ---
+        // --- 特效 PART 2: 運勢數據 ---
         const fortuneData = {
             travel: ["今天適合接觸新科技或學習程式邏輯。", "嘗試用全新的觀點解決老問題，驚喜就在轉角。", "適合參加社群聚會，交流前衛的想法。", "今日靈感爆發，適合進行腦力激盪。", "去科技展或藝術展，讓思維跨界碰撞。"],
             love: ["感情中需要彼此獨立的空間，尊重對方的奇思妙想。", "單身者可能在共同興趣圈遇到志同道合的人。", "比起激情，你今天更傾向於尋求精神層面的共鳴。", "適合與伴侶一起規劃未來的藍圖。"],
-            health: ["注意小腿與腳踝的負擔，多做拉伸。", "減少電子產品使用時間，保護眼睛與大腦。", "適合嘗試非傳統的放鬆方式，如音療或斷食。", "多補充水分，維持身體能量循環。"],
+            health: ["注意小腿與腳踝的負擔，多做拉伸。", "減少電子產品使用時間，保護眼睛與大腦。", "適合嘗試非傳統的放鬆方式，如音療或冥想。", "多補充水分，維持身體能量循環。"],
             luck: ["電光藍 / 無線藍牙耳機", "星空紫 / 科技感金屬配件", "透明色 / 玻璃水瓶", "銀灰色 / 智能手錶", "螢光綠 / 創意貼紙"]
         };
 
         function initFortune() {
             const now = new Date();
-            const year = now.getUTCFullYear(); const month = now.getUTCMonth(); const date = now.getUTCDate();
+            const year = now.getFullYear(); const month = now.getMonth(); const date = now.getDate();
             const seed = year * 10000 + (month + 1) * 100 + date;
             const getSeeded = (max, offset) => {
                 const x = Math.sin(seed + offset) * 10000;
@@ -225,7 +238,7 @@
             document.getElementById('f-health').innerText = fortuneData.health[getSeeded(fortuneData.health.length, 3)];
             const [color, item] = fortuneData.luck[getSeeded(fortuneData.luck.length, 4)].split(' / ');
             document.getElementById('f-luck').innerHTML = `幸運色：${color}<br>幸運物：${item}`;
-            document.getElementById('fortune-date').innerText = `量子讀取日 (UTC) - ${year}.${String(month+1).padStart(2,'0')}.${String(date).padStart(2,'0')}`;
+            document.getElementById('fortune-date').innerText = `量子讀取日 - ${year}.${String(month+1).padStart(2,'0')}.${String(date).padStart(2,'0')}`;
         }
         window.addEventListener('load', initFortune);
     </script>

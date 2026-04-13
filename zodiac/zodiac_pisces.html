@@ -44,49 +44,51 @@
             text-decoration: none;
             color: #80deea;
             font-size: 13px;
-            padding: 6px 14px;
+            padding: 8px 18px;
             background: rgba(128, 222, 234, 0.1);
-            border: 1px solid rgba(128, 222, 234, 0.5);
+            border: 1px solid rgba(128, 222, 234, 0.4);
             border-radius: 20px;
             transition: 0.3s;
         }
-        .back-btn:hover { background: rgba(128, 222, 234, 0.3); box-shadow: 0 0 10px rgba(128, 222, 234, 0.5); }
+        .back-btn:hover { background: rgba(128, 222, 234, 0.25); box-shadow: 0 0 12px rgba(128, 222, 234, 0.4); }
 
-        /* 通用玻璃擬態卡片 */
+        /* 通用玻璃擬態卡片 (更通透的設計) */
         .glass-card {
-            background: rgba(10, 30, 50, 0.4); 
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(128, 222, 234, 0.2);
+            background: rgba(10, 30, 50, 0.35); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(128, 222, 234, 0.15);
             border-radius: 25px;
             padding: 30px;
             box-sizing: border-box;
         }
 
         /* 第一層：標題區 */
-        .zodiac-header { text-align: center; border: 1.5px solid rgba(179, 157, 219, 0.3); }
-        .zodiac-header h1 { color: #b2ebf2; font-size: 2.2rem; margin: 0; letter-spacing: 8px; text-shadow: 0 0 15px rgba(178, 235, 242, 0.5); }
+        .zodiac-header { text-align: center; border: 1.5px solid rgba(179, 157, 219, 0.25); }
+        .zodiac-header h1 { color: #b2ebf2; font-size: 2.2rem; margin: 0; letter-spacing: 8px; text-shadow: 0 0 15px rgba(178, 235, 242, 0.4); }
 
         /* 第二層：介紹區 */
-        .zodiac-intro { display: flex; align-items: center; gap: 30px; }
-        .symbol-large { font-size: 5rem; color: #b2ebf2; filter: drop-shadow(0 0 15px rgba(178, 235, 242, 0.7)); }
+        .zodiac-intro { display: flex; align-items: center; gap: 35px; }
+        .symbol-large { font-size: 5.5rem; color: #b2ebf2; filter: drop-shadow(0 0 15px rgba(178, 235, 242, 0.6)); }
+        .intro-text p { line-height: 1.8; letter-spacing: 1px; }
 
         /* 第三層：隨機每日運勢 */
-        .fortune-section h2 { text-align: center; margin: 20px 0; font-size: 1.4rem; color: #b39ddb; }
-        .fortune-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .fortune-item { background: rgba(255, 255, 255, 0.05); border-radius: 18px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.3s; }
-        .fortune-item:hover { border-color: #80deea; transform: translateY(-5px); }
-        .fortune-item h3 { color: #80deea; margin-top: 0; font-size: 1.1rem; }
+        .fortune-section h2 { text-align: center; margin: 20px 0; font-size: 1.4rem; color: #b39ddb; letter-spacing: 3px; }
+        .fortune-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+        .fortune-item { background: rgba(255, 255, 255, 0.04); border-radius: 20px; padding: 22px; border: 1px solid rgba(255, 255, 255, 0.08); transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .fortune-item:hover { border-color: #80deea; transform: translateY(-8px); background: rgba(128, 222, 234, 0.05); }
+        .fortune-item h3 { color: #80deea; margin-top: 0; font-size: 1.1rem; letter-spacing: 1px; }
 
         /* 第四層：深度分析區 */
         .detail-analysis { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
-        .analysis-block h3 { color: #b39ddb; border-left: 4px solid #b39ddb; padding-left: 15px; margin-top: 0; }
-        .analysis-block ul { list-style: none; padding: 0; }
-        .analysis-block li { margin-bottom: 15px; line-height: 1.7; color: #b2dfdb; }
+        .analysis-block h3 { color: #b39ddb; border-left: 5px solid #b39ddb; padding-left: 15px; margin-top: 0; font-weight: normal; }
+        .analysis-block ul { list-style: none; padding: 0; margin-top: 15px; }
+        .analysis-block li { margin-bottom: 15px; line-height: 1.8; color: #b2dfdb; position: relative; padding-left: 20px; }
+        .analysis-block li::before { content: "✧"; position: absolute; left: 0; color: #b39ddb; }
         .analysis-block b { color: #fff; }
 
         @media (max-width: 600px) {
-            .zodiac-intro { flex-direction: column; text-align: center; }
+            .zodiac-intro { flex-direction: column; text-align: center; gap: 10px; }
             .fortune-grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -97,25 +99,25 @@
 
     <div class="container">
         <nav class="back-nav">
-            <a href="index.html" class="back-btn">← 返回列表</a>
+            <a href="javascript:history.back()" class="back-btn">← 返回</a>
         </nav>
 
         <header class="glass-card zodiac-header">
             <h1>雙魚座 PISCES</h1>
-            <p style="color: #80cbc4; margin-top: 10px;">2月19日 － 3月20日</p>
+            <p style="color: #80cbc4; margin-top: 10px; letter-spacing: 2px;">2月19日 － 3月20日</p>
         </header>
 
         <section class="glass-card zodiac-intro">
             <div class="symbol-large">♓</div>
             <div class="intro-text">
-                <p>雙魚座是水象星座，受海王星守護。代表著無盡的包容心、豐富的直覺與對真善美的執著追求。</p>
+                <p>雙魚座是水象星座，受海王星守護。代表著無盡的包容心、豐富的直覺與對真善美的執著追求，是十二星座中靈性最深刻的夢想家。</p>
             </div>
         </section>
 
         <section class="fortune-section">
             <h2 id="fortune-date">正在捕捉夢境電波...</h2>
             <div class="fortune-grid">
-                <div class="fortune-item"><h3>🎨 靈魂畫布</h3><p id="f-travel">正在感應...</p></div>
+                <div class="fortune-item"><h3>🎨 靈魂畫布</h3><p id="f-spirit">正在感應...</p></div>
                 <div class="fortune-item"><h3>💧 情感共鳴</h3><p id="f-love">正在解讀...</p></div>
                 <div class="fortune-item"><h3>🐚 內在港灣</h3><p id="f-health">正在檢測...</p></div>
                 <div class="fortune-item"><h3>🔮 幻象元素</h3><p id="f-luck">正在讀取...</p></div>
@@ -134,15 +136,15 @@
             <div class="analysis-block">
                 <h3>優點與缺點</h3>
                 <ul>
-                    <li><b>優點：</b> 心地善良、富有同情心、直覺精準、不自私、具備浪漫情懷。</li>
-                    <li><b>缺點：</b> 容易感情用事、有時會逃避現實、優柔寡斷、太容易信任他人。</li>
+                    <li><b>優點：</b> 心地善良、富有同情心、直覺精準、浪漫情懷、不具侵略性。</li>
+                    <li><b>缺點：</b> 容易逃避現實、優柔寡斷、過於感性而失去邏輯、邊界感較弱。</li>
                 </ul>
             </div>
         </section>
     </div>
 
     <script>
-        // --- 特效 PART 1: 游標拖曳尾跡 (雙魚版：上升氣泡) ---
+        // --- 特效 PART 1: 游標拖曳尾跡 (雙魚版：深海上升氣泡) ---
         const canvas = document.getElementById('magic-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, particles = [], mouse = { x: -100, y: -100 };
@@ -152,26 +154,44 @@
 
         window.addEventListener('mousemove', (e) => {
             mouse.x = e.clientX; mouse.y = e.clientY;
-            if(Math.random() > 0.5) particles.push(new Particle(mouse.x, mouse.y));
+            // 隨機產生氣泡
+            if(Math.random() > 0.4) particles.push(new Particle(mouse.x, mouse.y));
+        });
+
+        // 點擊時產生大量氣泡
+        window.addEventListener('click', (e) => {
+            for(let i=0; i<8; i++) particles.push(new Particle(e.clientX, e.clientY, true));
         });
 
         class Particle {
-            constructor(x, y) {
+            constructor(x, y, isClick = false) {
                 this.x = x; this.y = y;
+                this.size = Math.random() * (isClick ? 6 : 4) + 2;
+                this.vx = (Math.random() - 0.5) * 1.5;
+                this.vy = -Math.random() * 2 - (isClick ? 2 : 1); // 一定向上漂浮
+                this.life = 1;
+                this.decay = Math.random() * 0.01 + 0.005;
                 this.color = `rgba(178, 235, 242, `; 
-                this.size = Math.random() * 4 + 2;
-                this.vx = (Math.random() - 0.5) * 1;
-                this.vy = -Math.random() * 2 - 1; // 向上漂浮
-                this.life = 1; this.decay = 0.01;
             }
             update() {
                 this.x += this.vx; this.y += this.vy;
-                this.life -= this.decay; if(this.life < 0) this.life = 0;
+                this.vx += Math.sin(this.y / 30) * 0.1; // 模擬水流擺動
+                this.life -= this.decay;
             }
             draw() {
-                ctx.strokeStyle = this.color + this.life + ')';
-                ctx.lineWidth = 1;
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.stroke();
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.strokeStyle = this.color + (this.life * 0.6) + ')';
+                ctx.lineWidth = 1.5;
+                ctx.stroke(); // 只畫邊框，像透明氣泡
+                
+                // 氣泡高光
+                ctx.beginPath();
+                ctx.arc(this.x - this.size * 0.3, this.y - this.size * 0.3, this.size * 0.1, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.life * 0.4})`;
+                ctx.fill();
+                ctx.restore();
             }
         }
 
@@ -183,12 +203,12 @@
         }
         animate();
 
-        // --- 特效 PART 2: 每日運勢 ---
+        // --- 特效 PART 2: 每日運勢 (針對雙魚座感性調整) ---
         const fortuneData = {
-            travel: ["今天適合接觸與水有關的事物，或是聽聽療癒音樂來放鬆。", "適合去書店或安靜的藝廊，讓心靈沉澱並吸取能量。", "對於身邊人的需求能精準捕捉，你的溫柔是今天最強的幸運物。", "適合把腦中的靈感記錄下來，這可能是未來的藍圖。"],
-            love: ["感情中充滿浪漫氛圍，適合與伴侶進行深度的心靈對話。", "單身者可能在文藝活動中遇到讓你感到窩心的人。", "信任你的直覺，它會帶領你避開不必要的紛擾。", "適合展示你柔軟的一面，這反而能贏得更多尊重。"],
-            health: ["注意睡眠品質，睡前適合點燃淡淡的薰香。 ", "多喝水，並注意足部的放鬆與護理。", "冥想能有效排除負面能量，維持內在平衡。", "減少攝取刺激性食物，溫和的飲食更適合今天的你。"],
-            luck: ["湖水綠 / 蕾絲手帕", "珍珠白 / 圓潤飾品", "海軍藍 / 隨身小瓶水", "薰衣草紫 / 柔軟圍巾", "透明色 / 水晶球飾品"]
+            spirit: ["今天適合接觸與水有關的事物，或聽聽療癒音樂來觸碰潛意識。", "適合去安靜的藝廊或書店，讓靈魂沉澱並從藝術中吸取能量。", "你的夢境中可能藏著重要啟示，睡醒後試著把靈感記錄下來。", "對於身邊人的需求能精準捕捉，你的溫柔是今天最強大的能量。"],
+            love: ["感情中充滿浪漫氛圍，適合與另一半共享一段安靜的午後。", "單身者可能在文藝場合或公益活動中遇到心靈契合的對象。", "信任你的直覺，它會帶領你避開複雜的人際紛擾。", "適合展示你柔軟、真實的一面，脆弱感有時也是一種迷人的力量。"],
+            health: ["注意睡眠品質，睡前適合進行冥想或足部熱敷來放鬆。", "多喝水，並避免長時間處於負能量過強的環境中。", "心靈的平衡就是最好的藥劑，試著原諒那些讓你糾結的小事。", "溫和的拉伸運動或游泳，能有效排除身體累積的疲勞。"],
+            luck: ["湖水綠 / 蕾絲物件", "珍珠白 / 圓潤飾品", "海軍藍 / 隨身噴霧", "薰衣草紫 / 柔軟圍巾", "透明色 / 水晶原石"]
         };
 
         function initFortune() {
@@ -199,12 +219,12 @@
                 const x = Math.sin(seed + offset) * 10000;
                 return Math.floor((x - Math.floor(x)) * max);
             };
-            document.getElementById('f-travel').innerText = fortuneData.travel[getSeeded(fortuneData.travel.length, 1)];
+            document.getElementById('f-spirit').innerText = fortuneData.spirit[getSeeded(fortuneData.spirit.length, 1)];
             document.getElementById('f-love').innerText = fortuneData.love[getSeeded(fortuneData.love.length, 2)];
             document.getElementById('f-health').innerText = fortuneData.health[getSeeded(fortuneData.health.length, 3)];
             const [color, item] = fortuneData.luck[getSeeded(fortuneData.luck.length, 4)].split(' / ');
             document.getElementById('f-luck').innerHTML = `幸運色：${color}<br>幸運物：${item}`;
-            document.getElementById('fortune-date').innerText = `靈魂共鳴日 (UTC) - ${year}.${String(month+1).padStart(2,'0')}.${String(date).padStart(2,'0')}`;
+            document.getElementById('fortune-date').innerText = `靈魂共鳴日 - ${year}.${String(month+1).padStart(2,'0')}.${String(date).padStart(2,'0')}`;
         }
         window.addEventListener('load', initFortune);
     </script>

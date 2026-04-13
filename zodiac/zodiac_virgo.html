@@ -44,45 +44,46 @@
             text-decoration: none;
             color: #cfd8dc;
             font-size: 13px;
-            padding: 6px 14px;
-            background: rgba(207, 216, 220, 0.1);
-            border: 1px solid rgba(207, 216, 220, 0.5);
+            padding: 8px 18px;
+            background: rgba(207, 216, 220, 0.08);
+            border: 1px solid rgba(207, 216, 220, 0.4);
             border-radius: 4px;
             transition: 0.3s;
+            letter-spacing: 1px;
         }
-        .back-btn:hover { background: rgba(207, 216, 220, 0.3); box-shadow: 0 0 10px rgba(207, 216, 220, 0.5); }
+        .back-btn:hover { background: rgba(207, 216, 220, 0.15); box-shadow: 0 0 12px rgba(255, 255, 255, 0.2); }
 
-        /* 通用玻璃擬態卡片 */
+        /* 通用玻璃擬態卡片 (處女座版：更方正、更通透) */
         .glass-card {
-            background: rgba(255, 255, 255, 0.03); /* 極低透明度以顯整潔 */
+            background: rgba(255, 255, 255, 0.02); 
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px; /* 較方正的圓角，體現秩序 */
-            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px; 
+            padding: 35px;
             box-sizing: border-box;
         }
 
-        /* 第一層：標題區 */
+        /* 標題區 */
         .zodiac-header { text-align: center; border: 1px solid rgba(255, 255, 255, 0.2); }
-        .zodiac-header h1 { color: #f5f5f5; font-size: 2.2rem; margin: 0; letter-spacing: 8px; text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
+        .zodiac-header h1 { color: #f5f5f5; font-size: 2.2rem; margin: 0; letter-spacing: 10px; text-shadow: 0 0 12px rgba(255, 255, 255, 0.15); }
 
-        /* 第二層：介紹區 */
-        .zodiac-intro { display: flex; align-items: center; gap: 30px; }
-        .symbol-large { font-size: 5rem; color: #cfd8dc; filter: drop-shadow(0 0 8px rgba(207, 216, 220, 0.4)); }
+        /* 介紹區 */
+        .zodiac-intro { display: flex; align-items: center; gap: 35px; }
+        .symbol-large { font-size: 5rem; color: #cfd8dc; filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)); }
 
-        /* 第三層：隨機每日運勢 */
-        .fortune-section h2 { text-align: center; margin: 20px 0; font-size: 1.4rem; color: #b0bec5; }
+        /* 每日運勢 */
+        .fortune-section h2 { text-align: center; margin: 25px 0; font-size: 1.4rem; color: #b0bec5; font-weight: 300; letter-spacing: 3px; }
         .fortune-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .fortune-item { background: rgba(255, 255, 255, 0.02); border-radius: 8px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.3s; }
-        .fortune-item:hover { border-color: #ffffff; background: rgba(255, 255, 255, 0.05); }
-        .fortune-item h3 { color: #cfd8dc; margin-top: 0; font-size: 1.1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 5px; }
+        .fortune-item { background: rgba(255, 255, 255, 0.02); border-radius: 8px; padding: 22px; border: 1px solid rgba(255, 255, 255, 0.06); transition: 0.3s; }
+        .fortune-item:hover { border-color: #ffffff; background: rgba(255, 255, 255, 0.04); transform: scale(1.02); }
+        .fortune-item h3 { color: #cfd8dc; margin-top: 0; font-size: 1.1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 8px; font-weight: 500; }
 
-        /* 第四層：深度分析區 */
+        /* 深度分析區 */
         .detail-analysis { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
-        .analysis-block h3 { color: #ffffff; border-left: 3px solid #cfd8dc; padding-left: 15px; margin-top: 0; font-size: 1.2rem; }
+        .analysis-block h3 { color: #ffffff; border-left: 3px solid #cfd8dc; padding-left: 15px; margin-top: 0; font-size: 1.25rem; letter-spacing: 1px; }
         .analysis-block ul { list-style: square; padding-left: 20px; }
-        .analysis-block li { margin-bottom: 12px; line-height: 1.7; color: #bdbdbd; }
+        .analysis-block li { margin-bottom: 14px; line-height: 1.8; color: #bdbdbd; font-size: 0.95rem; }
         .analysis-block b { color: #ffffff; font-weight: 500; }
 
         @media (max-width: 600px) {
@@ -102,13 +103,13 @@
 
         <header class="glass-card zodiac-header">
             <h1>處女座 VIRGO</h1>
-            <p style="color: #888; margin-top: 10px; font-size: 0.9rem;">8月23日 － 9月22日</p>
+            <p style="color: #888; margin-top: 10px; font-size: 0.9rem; letter-spacing: 2px;">8月23日 － 9月22日</p>
         </header>
 
         <section class="glass-card zodiac-intro">
             <div class="symbol-large">♍</div>
             <div class="intro-text">
-                <p>處女座是土象星座，受水星守護。代表著精確、務實、以及對於事物運作邏輯的深刻理解與優化能力。</p>
+                <p>處女座是土象星座，受掌管溝通與邏輯的水星守護。他們是天生的優化者，代表著精確、務實、以及對於系統運作規律的深刻洞察。</p>
             </div>
         </section>
 
@@ -126,16 +127,16 @@
             <div class="analysis-block">
                 <h3>處女座核心特質</h3>
                 <ul>
-                    <li><b>卓越的分析力：</b> 擅長將複雜的問題拆解，並找出最高效的解決方案。</li>
-                    <li><b>追求完美：</b> 對細節有著近乎苛求的堅持，相信凡事都有提升的空間。</li>
-                    <li><b>謙遜與服務：</b> 喜歡在幕後默默耕耘，透過解決問題與幫助他人來實現自我價值。</li>
+                    <li><b>卓越的分析邏輯：</b> 擁有將混亂資訊條理化的天賦，擅長拆解複雜問題並找出最高效的解決路徑。</li>
+                    <li><b>完美的實踐者：</b> 對細節有著極致的堅持，相信透過不斷的修正與優化，能讓事物達到理想狀態。</li>
+                    <li><b>謙遜的服務型人格：</b> 務實且低調，通常在背後支撐著系統的運轉，透過解決問題來展現自我價值。</li>
                 </ul>
             </div>
             <div class="analysis-block">
                 <h3>優點與缺點</h3>
                 <ul>
-                    <li><b>優點：</b> 處事謹慎、條理清晰、值得信賴、求知慾強、具備批判性思維。</li>
-                    <li><b>缺點：</b> 容易過度憂慮、愛挑剔、有時會陷入瑣碎細節而忽略全局。</li>
+                    <li><b>優點：</b> 處事謹慎、條理分明、具備高度批判性思維、求知慾旺盛、極度值得信賴。</li>
+                    <li><b>缺點：</b> 容易因過度擔憂而產生壓力、愛挑剔、有時會陷入瑣碎細節而遺失整體目標。</li>
                 </ul>
             </div>
         </section>
@@ -157,18 +158,17 @@
 
         window.addEventListener('click', (e) => {
             clickRipples.push(new Ripple(e.clientX, e.clientY));
-            for(let i=0; i<10; i++) particles.push(new Particle(e.clientX, e.clientY, true));
+            for(let i=0; i<12; i++) particles.push(new Particle(e.clientX, e.clientY, true));
         });
 
         class Particle {
             constructor(x, y, isClickStar = false) {
                 this.x = x; this.y = y; this.isClickStar = isClickStar;
-                // 處女座色系：白、淺灰、銀色
-                this.color = isClickStar ? 'rgba(255, 255, 255, ' : 'rgba(200, 200, 200, '; 
-                this.size = isClickStar ? Math.random() * 3 + 1 : Math.random() * 1.5 + 0.5;
-                this.speedX = (Math.random() - 0.5) * (isClickStar ? 4 : 0.8);
-                this.speedY = (Math.random() - 0.5) * (isClickStar ? 4 : 0.8);
-                this.life = 1; this.decay = isClickStar ? 0.02 : 0.015;
+                this.color = isClickStar ? 'rgba(255, 255, 255, ' : 'rgba(180, 190, 200, '; 
+                this.size = isClickStar ? Math.random() * 2.5 + 1 : Math.random() * 1.2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * (isClickStar ? 3 : 0.6);
+                this.speedY = (Math.random() - 0.5) * (isClickStar ? 3 : 0.6);
+                this.life = 1; this.decay = isClickStar ? 0.02 : 0.012;
             }
             update() {
                 this.x += this.speedX; this.y += this.speedY;
@@ -184,12 +184,12 @@
 
         class Ripple {
             constructor(x, y) {
-                this.x = x; this.y = y; this.radius = 1; this.maxRadius = 50;
-                this.life = 1; this.decay = 0.03;
+                this.x = x; this.y = y; this.radius = 1; this.maxRadius = 55;
+                this.life = 1; this.decay = 0.028;
             }
-            update() { this.radius += (this.maxRadius-this.radius)*0.1; this.life -= this.decay; }
+            update() { this.radius += (this.maxRadius-this.radius)*0.12; this.life -= this.decay; }
             draw() {
-                ctx.strokeStyle = `rgba(255, 255, 255, ${this.life * 0.3})`; ctx.lineWidth = 1;
+                ctx.strokeStyle = `rgba(255, 255, 255, ${this.life * 0.4})`; ctx.lineWidth = 1;
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2); ctx.stroke();
             }
         }
@@ -204,12 +204,12 @@
         }
         animate();
 
-        // --- 特效 PART 2: 每日運勢 (針對處女座修改) ---
+        // --- 特效 PART 2: 數據化運勢 ---
         const fortuneData = {
-            travel: ["今天適合處理待辦清單，效率會讓你心情愉悅。", "適合進行大掃除或數位斷捨離，清理多餘的檔案。", "學習一項新的專業技能，你的專注力非常適合研讀細節。", "去圖書館或安靜的咖啡廳，這能幫你理清思緒。", "適合為下週制定精密的計劃。"],
-            love: ["感情中比起浪漫甜言蜜語，你更看重實際的行動與關懷。", "適合與伴侶討論生活習慣的調整，共同優化生活質量。", "單身者可能在工作場合或學習環境中注意到細心的人。", "不要對自己或對方太過苛刻，放鬆一點會更迷人。"],
-            health: ["注意神經系統的放鬆，避免過度焦慮影響睡眠。", "適合攝取高纖維食物，維護消化系統健康。", "嘗試冥想或深呼吸，減少大腦的過載運算。", "注意手部清潔與小傷口的處理。"],
-            luck: ["珍珠白 / 簡約筆記本", "大理石灰 / 皮革名片夾", "象牙色 / 鋼筆", "極簡黑 / 機械錶", "薄荷綠 / 整理收納盒"]
+            travel: ["今日適合處理累積的待辦清單，完成任務帶來的多巴胺將會是你能量的來源。", "適合進行環境的大掃除或電子郵件的數位斷捨離，清理雜亂能活化思考。", "專注於一項需要細節的專業技能研讀，今日的邏輯整合能力處於高峰。", "適合制定下一階段的精密預算或健康計畫，你的決策將非常客觀。", "適合在安靜的圖書館或簡約的空間工作，這能幫你排除多餘的外界干擾。"],
+            love: ["感情中比起華麗的承諾，你更在意細水長流的日常分擔，今日適合與對方協調家務。", "與伴侶溝通時應避免過度關注細微缺點，改以鼓勵的方式能讓雙方關係更和諧。", "單身者可能會在工作場合注意到某位做事嚴謹、令人信賴的對象。", "學著適時放手對完美的苛求，展現一點脆弱反而能拉近彼此的距離。"],
+            health: ["注意自律神經系統的調節，避免因思慮過多而影響今日的睡眠品質。", "飲食應以原型食物與高纖維蔬菜為主，維護敏感的消化系統。", "嘗試數位排毒一小時，減少大腦的資訊過載運算，有助於舒緩壓力。", "注意手部細部保養與關節處的放鬆，避免長時間維持同一姿勢。"],
+            luck: ["珍珠白 / 簡約格紋筆記本", "大理石灰 / 防磁皮革名片盒", "象牙色 / 金屬細頭鋼筆", "極簡黑 / 藍寶石鏡面機械錶", "鼠尾草綠 / 專業收納隔板"]
         };
 
         function initFortune() {
@@ -231,3 +231,4 @@
     </script>
 </body>
 </html>
+        
