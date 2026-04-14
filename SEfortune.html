@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星球探索 - 四元素神社系統</title>
+    <link rel="stylesheet" href="SEstyle.css">
+    <style>
+        :root {
+            --theme-color: #7dd3fc;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.12);
+        }
+
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            background-color: #05070a;
+            color: #e0e0e0;
+            font-family: 'PingFang TC', sans-serif;
+            cursor: crosshair;
+        }
+
+        #magic-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- 入口卡片設計 --- */
+        #entry-system {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            padding: 120px 40px 60px;
+        }
+
+        .element-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+        }
+
+        .element-card:hover {
+            transform: translateY(-12px);
+            background: rgba(255,255,255,0.08);
+            border-color: var(--theme-color);
+            box-shadow: 0 0 30px var(--theme-color);
+        }
+
+        .icon-box { width: 80px; height: 80px; margin: 0 auto 20px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .fire { background: radial-gradient(circle, #ff4d4d, transparent); animation: pulse 1.5s infinite; border-radius: 50%; width: 50px; height: 50px; }
+        .earth { width: 45px; height: 45px; border: 4px solid #ffcc66; border-radius: 10px; animation: rotate 10s linear infinite; box-shadow: 0 0 15px #ffcc66; }
+        .water { width: 50px; height: 50px; border-radius: 40% 60% 70% 30% / 40% 50% 60% 40%; background: #4da6ff; animation: morph 3s infinite alternate; }
+        .wind { width: 50px; height: 50px; border: 2px dashed #99ffcc; border-radius: 50%; animation: rotate 3s linear infinite; }
+
+        @keyframes pulse { 0% { transform: scale(0.8); opacity: 0.6; } 100% { transform: scale(1.3); opacity: 0; } }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes morph { from { border-radius: 40% 60% 70% 30%; } to { border-radius: 70% 30% 30% 70%; } }
+
+        /* --- 神社介面 --- */
+        #shrine-system {
+            display: none;
+            flex: 1;
+            padding: 100px 20px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .fortune-card {
+            background: rgba(10, 12, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--theme-color);
+            border-radius: 24px;
+            padding: 50px 30px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+
+        .shrine-box-vis {
+            width: 70px; height: 100px;
+            background: var(--theme-color);
+            margin: 0 auto 30px;
+            border-radius: 6px;
+            box-shadow: 0 0 20px var(--theme-color);
+        }
+        .shaking { animation: shake 0.1s infinite; }
+        @keyframes shake { 0% { transform: translate(2px, 2px); } 50% { transform: translate(-2px, -2px); } 100% { transform: translate(2px, -2px); } }
+
+        .draw-btn {
+            background: transparent;
+            border: 1px solid var(--theme-color);
+            color: var(--theme-color);
+            padding: 14px 60px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: 0.3s;
+            margin-top: 20px;
+        }
+        .draw-btn:hover:not(:disabled) { background: var(--theme-color); color: #000; }
+
+        .result-box { text-align: left; animation: fadeIn 0.6s forwards; }
+        .result-title { font-size: 2.2rem; text-align: center; margin-bottom: 25px; display: block; font-weight: 900; }
+        .item { margin-bottom: 15px; font-size: 1rem; color: #ddd; line-height: 1.6; }
+        .item b { color: #fff; border-left: 4px solid var(--theme-color); padding-left: 12px; margin-right: 10px; }
+
+        .bottom-footer {
+            padding: 30px 0;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+        }
+        .footer-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+        .footer-item { font-size: 0.8rem; color: #666; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+        
+        /* 星座清單文字樣式 */
+    .constellation-list {
+        font-size: 0.85rem;
+         color: #888; /* 平時顏色較淡 */
+         margin-top: 8px;
+         letter-spacing: 1px;
+         transition: color 0.3s ease;
+    }
+
+/* 當滑鼠移入卡片時，星座文字跟著變亮 */
+    .element-card:hover .constellation-list {
+        color: #fff;
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    }
+
+/* 如果原本有寫 h6 之類的，可以拿掉或統一用 p */
+    .element-card h3 {
+        margin-bottom: 0; /* 縮短與星座文字的距離 */
+    }
+    
+    </style>
+</head>
+<body>
+
+    <canvas id="magic-canvas"></canvas>
+
+    <div class="wrapper">
+        <header class="top-nav">
+            <a href="index.html" class="logo-link"><img src="logo.png" alt="Logo" class="logo-img"></a>
+            <nav class="menu">
+                <a href="index.html" class="menu-item">主頁</a>
+                <a href="SEplanets.html" class="menu-item">星球</a>
+                <a href="SEother.html" class="menu-item">星座</a>
+                <a href="SEfortune.html" class="menu-item active">神社</a>
+                <a href="SEabout.html" class="menu-item">關於</a>
+            </nav>
+        </header>
+
+       <main id="entry-system">
+    <div class="element-card" onclick="openShrine('fire', '#ff4d4d')">
+        <div class="icon-box"><div class="fire"></div></div>
+        <h3>火象神社</h3>
+        <p class="constellation-list">牡羊座、獅子座、射手座</p>
+    </div>
+    <div class="element-card" onclick="openShrine('earth', '#ffcc66')">
+        <div class="icon-box"><div class="earth"></div></div>
+        <h3>土象神社</h3>
+        <p class="constellation-list">金牛座、處女座、摩羯座</p>
+    </div>
+    <div class="element-card" onclick="openShrine('water', '#4da6ff')">
+        <div class="icon-box"><div class="water"></div></div>
+        <h3>水象神社</h3>
+        <p class="constellation-list">巨蟹座、天蠍座、雙魚座</p>
+    </div>
+    <div class="element-card" onclick="openShrine('wind', '#99ffcc')">
+        <div class="icon-box"><div class="wind"></div></div>
+        <h3>風象神社</h3>
+        <p class="constellation-list">雙子座、天秤座、水瓶座</p>
+    </div>
+</main>
+
+        <main id="shrine-system">
+            <div class="fortune-card">
+                <h2 id="shrine-title" style="letter-spacing:10px; margin-bottom:40px;">宇宙神社</h2>
+                <div id="display-area" style="min-height:250px; display:flex; align-items:center; justify-content:center;">
+                    <div class="shrine-box-vis" id="box"></div>
+                </div>
+                <button onclick="draw()" id="draw-btn" class="draw-btn">搖動籤筒</button>
+                <p onclick="location.reload()" style="margin-top:25px; cursor:pointer; color:#444; text-decoration:underline; font-size:0.8rem;">返回入口</p>
+            </div>
+        </main>
+
+        <footer class="bottom-footer">
+            <div class="footer-grid">
+                <div class="footer-item">DC: <span>yukixiyu</span></div>
+                <div class="footer-item">IG: <span>YukixiYu</span></div>
+                <div class="footer-item">Gmail: <span>b067941536@gmail.com</span></div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // --- 1. 特效系統 ---
+        const canvas = document.getElementById('magic-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [], ripples = [], themeColor = '#7dd3fc';
+
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+
+        window.addEventListener('mousemove', e => particles.push(new Particle(e.clientX, e.clientY)));
+        window.addEventListener('click', e => {
+            ripples.push(new Ripple(e.clientX, e.clientY));
+            for(let i=0; i<15; i++) particles.push(new Particle(e.clientX, e.clientY, true));
+        });
+
+        class Particle {
+            constructor(x, y, isBurst = false) {
+                this.x = x; this.y = y; this.life = 1;
+                this.decay = isBurst ? 0.02 : 0.015;
+                this.size = isBurst ? Math.random() * 4 + 1 : Math.random() * 1.5;
+                this.speedX = (Math.random() - 0.5) * (isBurst ? 8 : 2);
+                this.speedY = (Math.random() - 0.5) * (isBurst ? 8 : 2);
+                this.color = themeColor;
+            }
+            update() { this.x += this.speedX; this.y += this.speedY; this.life -= this.decay; }
+            draw() {
+                ctx.fillStyle = this.color + Math.floor(this.life * 255).toString(16).padStart(2, '0');
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+
+        class Ripple {
+            constructor(x, y) { this.x = x; this.y = y; this.radius = 1; this.life = 1; }
+            update() { this.radius += 4; this.life -= 0.02; }
+            draw() {
+                ctx.strokeStyle = themeColor + Math.floor(this.life * 150).toString(16).padStart(2, '0');
+                ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2); ctx.stroke();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles = particles.filter(p => p.life > 0);
+            particles.forEach(p => { p.update(); p.draw(); });
+            ripples = ripples.filter(r => r.life > 0);
+            ripples.forEach(r => { r.update(); r.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- 2. 籤池資料結構 (區分 Good/Bad) ---
+const pools = {
+    fire: {
+        title: "烈焰神社", 
+        color: "#ff4d4d", 
+        items: [
+            // --- 原有內容 ---
+            { type: "good", w: "行動力極高，今日適合開啟新計畫。", s: "創作靈感爆發，效率提升 60%。", l: "熱情被看見，大膽主動會有好結果。", d: "注意口氣，別與人發生無謂爭執。" },
+            // --- 新增 Good 內容 (衝一波系列) ---
+            { type: "good", w: "你終於肯動了，奇蹟差點發生。", s: "今天很忙，但至少不是在裝忙。", l: "你稍微主動一下，對方直接+10好感。", d: "趁現在有幹勁快做，不然等等又廢了。" },
+            { type: "good", w: "你今天不像平常那麼廢，值得紀念。", s: "事情有在推進，雖然還是很慢。", l: "氣氛不錯，但你還是有機會自己搞砸。", d: "別想太多，先做再說，你想太多只會不做。" },
+            // --- 新增 Bad 內容 (翻車系列) ---
+            { type: "bad", w: "你很想改變人生，但只限於想。", s: "忙一整天，成果=0，辛苦了空氣。", l: "你不說，對方也不會通靈懂你。", d: "先做一件事，不然你今天又會什麼都沒做。" },
+            { type: "bad", w: "三分鐘熱度正常發揮。", s: "時間過很快，因為你都在滑手機。", l: "你在等對方主動，對方也在等。", d: "關掉手機10分鐘，你人生會好一點。" },
+            { type: "good", w: "竟然沒被自己的衝動毀掉，命大。", s: "今天產值很高，因為你終於發現事情做不完會死。", l: "對方覺得你今天的積極很可愛，請保持這種假象。", d: "趁火還沒熄滅前趕快衝，因為你明天一定會懶散。" },
+            { type: "good", w: "恭喜！你今天的勇氣多到可以分給別人。", s: "專注力異常集中，建議去買張樂透。", l: "散發出迷人的危險氣息，有人被你電到了。", d: "有什麼想做的趕快動手，別讓腦袋有時間猶豫。" },
+            { type: "bad", w: "你的鬥志只維持了 15 分鐘，現在處於斷電狀態。", s: "忙著規劃『如何努力』，結果根本沒開始努力。", l: "講話太衝，對方正在考慮要不要封鎖你。", d: "先去洗個冷水澡，冷靜一下你那無處安放的衝動。" },
+            { type: "bad", w: "想當英雄，結果成了搞笑藝人。", s: "你的效率跟你的耐心一樣，基本上不存在。", l: "單向輸出的熱情不叫戀愛，叫騷擾。", d: "閉上嘴，做就對了，你的藉口已經夠多了。" },
+            { type: "good", w: "行動力終於上線，趁熱度消失前快衝。", s: "產值極高，建議把手機鎖進櫃子延續這種狀態。", l: "今天很有魅力，但別把你的主動變成侵略，會嚇跑人。", d: "趁著大腦沒猶豫時直接動手，這是你唯一的勝機。" },
+            { type: "good", w: "竟然沒被衝動誤事，看來今天智商有在線。", s: "效率驚人，適合處理那些你拖了半個月的爛帳。", l: "自信是好事，但別自大到以為全宇宙都該愛你。", d: "別想了，你這腦袋想越深越亂，做就對了。" },
+            { type: "bad", w: "你的鬥志大約只能維持到午餐時間。", s: "忙著規劃如何努力，結果根本沒開始努力，辛苦你的筆記本了。", l: "你以為是熱情，對方覺得是騷擾。請學會看人臉色。", d: "先去洗個冷水澡，清醒一下你那無處安放的衝動。" },
+            { type: "bad", w: "想當英雄，結果成了搞笑藝人。節哀。", s: "三分鐘熱度正常發揮，現在已經進入待機模式。", l: "你在等對方開口？人家在等領號碼牌，別在那邊自我感覺良好。", d: "關掉手機 10 分鐘，你的產值會提升 200%。" },
+            { type: "good", w: "靈感像噴火龍一樣擋不住，適合攻克難關。", s: "進入極限開發模式，Bug 看到你都會自動消失。", l: "今天很有魅力，但對方看你的眼神比較像是看一個熱血過頭的過動兒。", d: "趁著大腦過熱前把最難的邏輯寫完，然後去吃點冰降溫。" },
+            { type: "bad", w: "熱情大約只能維持到手機電量低於 20% 的時候。", s: "忙著優化那些根本沒人看的 UI 細節，核心功能依然是一團糟。", l: "你以為這叫積極？在對方眼裡這叫『情緒不穩定』，離遠一點比較安全。", d: "先去睡覺，清醒後的你比較像個人類，而不是只會噴火的怪獸。" }
+        ]
+    },
+    earth: {
+        title: "大地神社", 
+        color: "#ffcc66", 
+        items: [
+            { type: "good", w: "步步為營，穩定能帶來最終收穫。", s: "細節是關鍵，檢查考卷或代碼兩次。", l: "陪伴感加溫，平淡的生活也有幸福。", d: "財運上升，可能會發現被遺忘的小錢。" },
+            { type: "good", w: "雖然沒爆發，但至少沒崩盤。", s: "今天很普通，但普通就是一種幸福。", l: "關係穩定，雖然有點無聊但不會爆炸。", d: "維持現狀就好，你亂搞才會出事。" },
+            { type: "good", w: "慢慢來還真的有在變好（有一點）。", s: "事情穩定進行，雖然沒什麼成就感。", l: "對方沒有離開你，先知足。", d: "繼續撐，你現在最會的就是撐。" },
+            { type: "bad", w: "你卡住了，但你也沒打算動。", s: "一整天都在處理爛事，重點一件沒碰。", l: "關係停滯，你也懶得救。", d: "先把最亂的地方整理，不然你更爛。" },
+            { type: "bad", w: "想變好，但習慣不允許。", s: "效率低到你自己都看不起自己。", l: "你冷，對方也冷，恭喜冷戰開始。", d: "先動一點點，不然你會繼續爛下去。" },
+            { type: "good", w: "穩如泰山，大家都很佩服你那死不變通的堅持。", s: "進度緩慢但確實，你是龜兔賽跑裡的贏家。", l: "雖然沒驚喜，但你的老實讓你避開了不少送命題。", d: "繼續維持你的步調，反正要你變快你也會中風。" },
+            { type: "good", w: "今天的你非常有錢感，雖然口袋可能還是空的。", s: "處理瑣事的高手，沒人比你更有耐心磨細節。", l: "這種穩定感很讓人安心，適合找人結婚。", d: "多喝茶，維持這種淡定的精神狀態。" },
+            { type: "bad", w: "你這不叫穩定，你這叫『自暴自棄式的停滯』。", s: "做事死板到連 AI 都看不下去，試著轉個彎吧。", l: "無聊到讓對方想睡覺，建議加點生活情趣。", d: "別再猶豫了，那點風險不會要了你的命。" },
+            { type: "bad", w: "固執得像顆石頭，而且是擋路的那顆。", s: "進度落後是因為你花太多時間在糾結沒意義的細節。", l: "對方的暗示你完全沒接收到，你是裝了屏蔽器嗎？", d: "扔掉你的舊規則，今天嘗試一下不按牌理出牌。" },
+            { type: "good", w: "穩紮穩打，雖然慢到沒人發現你有在動，但會到的。", s: "細節處理得不錯，適合去複查那些會出錯的小地方。", l: "關係穩定，雖然穩定到有點像在修禪，但至少沒崩盤。", d: "繼續維持你的步調，反正要你變快你也做不到。" },
+            { type: "good", w: "財運微升，可能會在口袋發現被遺忘的 50 塊。", s: "進度雖然龜速，但勝在踏實，你是龜兔賽跑的最終贏家。", l: "對方覺得你很可靠，雖然可靠通常也是『無趣』的代名詞。", d: "多喝茶，維持這種淡定的精神狀態，別被外人影響。" },
+            { type: "bad", w: "你這不叫穩定，你這叫『原地腐爛』。", s: "做事死板到讓人窒息，試著轉個彎，天不會塌下來。", l: "無聊到讓對方想睡覺。再不加點創意，你就等著變背景板。", d: "扔掉你的舊規則，今天嘗試一下不按牌理出牌。" },
+            { type: "bad", w: "固執得像顆石頭，而且是擋路的那顆。", s: "花五小時糾結格式，五分鐘寫內容。你的人生順序有問題。", l: "對方的暗示你完全沒接收到。你是裝了屏障還是沒帶腦？", d: "別再猶豫了，那點風險真的不會要了你的命。" },
+            { type: "good", w: "累積的努力開始有回報，穩定發揮就是你的最強項。", s: "處理瑣事游刃有餘，細節完美到讓人以為你有強迫症。", l: "你的穩重很讓人安心，但一直聊專業話題只會讓對方覺得你在講課。", d: "維持現有的節奏，這場耐力賽你已經快要看到終點了。" },
+            { type: "bad", w: "你這不是踏實，你這叫『放棄思考』的原地踏步。", s: "進度落後是因為你花了一整天在糾結那個沒人會注意到的像素偏移。", l: "穩定到有點像一塊背景板。對方沒發現你在這，是因為你真的太安靜了。", d: "試著打破一個你自以為是的原則，相信我，天絕對不會塌下來。" },
+            { type: "good",w: "放棄思考直接睡覺，思考太多腦細胞會死太多(本來就不多了:D)。",s:"有機會被稱讚，但你會裝沒事（其實爽到內心翻滾）。",l:"或許有人在偷偷的喜歡妳", d:"按照自己的想法走下去，雖然獨自走完這段路相當困難，但是總會有個人想盡辦法的想幫助你。"}
+        ]
+    },
+    water: {
+        title: "深海神社", 
+        color: "#4da6ff", 
+        items: [
+            { type: "good", w: "直覺敏銳，順著心流走會有驚喜。", s: "靈感來自休息，累了就去喝杯水。", l: "感應到對方的暗示，溫柔回應吧。", d: "小心外送運，點餐前多看兩眼評價。" },
+            { type: "good", w: "今天情緒穩，奇蹟日。", s: "可以耍廢，而且不會有罪惡感。", l: "你變溫柔一點，世界也溫柔一點。", d: "今天適合放過自己一次。" },
+            { type: "good", w: "你終於不內耗了（暫時）。", s: "心情還不錯，小事也能開心。", l: "聊天順順的，沒在亂想。", d: "多做讓自己舒服的事。" },
+            { type: "bad", w: "情緒直接影響你整天表現。", s: "沒發生什麼，但你就是不爽。", l: "你想太多，對方其實沒那麼多戲。", d: "先冷靜，不然你會亂做決定。" },
+            { type: "bad", w: "今天是內耗大師。", s: "腦袋很忙，但人生沒前進。", l: "你在自己腦補一齣八點檔。", d: "停止想像，先回到現實。" },
+            { type: "good", w: "今天靈魂出竅得很成功，內心平靜如水。", s: "直覺準到爆，避開了所有想推工作給你的同事/同學。", l: "溫柔得像韓劇主角，雖然你心裡可能在罵髒話。", d: "找個安靜的地方待著，你的能量不適合跟白痴交流。" },
+            { type: "good", w: "恭喜！你今天成功扮演了一個情緒穩定的成年人。", s: "靈感噴發，你的創作欲望今天很有產值。", l: "共情能力滿分，大家都覺得你很懂他們。", d: "去喝杯好咖啡，犒賞一下今天沒崩潰的自己。" },
+            { type: "bad", w: "你的內心小劇場已經演到第三季了，可以收工了嗎？", s: "效率被情緒吞噬，你在那邊自怨自艾也沒用。", l: "你又在腦補對方的『喔』是什麼意思了，沒意思。", d: "停止內耗，直接去問清楚，不然就去睡覺。" },
+            { type: "bad", w: "感性大過理性，現在的你看起來像顆炸彈。", s: "腦子裡全是水，這不是溫柔，這是腦袋進水。", l: "過度的依賴會讓人窒息，給彼此留點氧氣吧。", d: "去做點勞力活，用肉體的疲勞來止住大腦的亂想。" },
+            { type: "good", w: "今天靈魂出竅得很成功，內心平靜得像沒開機一樣。", s: "直覺敏銳，精準避開了所有想推工作給你的人。", l: "你又在分析標點符號了？人家只是手滑，別再腦補八點檔。", d: "找個安靜的地方待著，你的能量不適合跟白痴交流。" },
+            { type: "good", w: "恭喜！你今天成功扮演了一個情緒穩定的正常人。", s: "靈感很多，可惜都是些暫時不能換錢的廢物。但你開心就好。", l: "溫柔是種假象。對方沒看穿你的小情緒，是因為他根本沒看你。", d: "去喝杯好咖啡，犒賞一下今天沒崩潰的自己。" },
+            { type: "bad", w: "你是今日內耗大師。腦袋忙著自虐，身體忙著癱軟。", s: "沒事找事煩。你在那邊自怨自艾，問題也不會自己消失。", l: "你想太多了。對方其實沒那麼多內心戲，他只是單純在忙。", d: "停止演戲，你的生活不是偶像劇，沒人會突然衝出來救你。" },
+            { type: "bad", w: "感性泛濫成災。你的情緒比天氣還難搞，連你自己都討厭吧？", s: "腦袋進水過多，建議儘快排水。效率？那是別人的事。", l: "情緒勒索不會換來愛，只會換來報警。請學會自己長大。", d: "去做點勞力活，用肉體的疲勞來止住大腦的亂想。" },
+            { type: "good", w: "直覺準到爆，今天適合靠感覺做決定，別理會邏輯了。", s: "在靜謐中找到新出口，適合整理架構或思考下一步的人生。", l: "溫柔是你的武器，但別溫柔到讓對方以為你是他失散多年的親哥哥。", d: "聽首輕音樂，讓靈魂跟上你敲代碼的速度，別跑太快。" },
+            { type: "bad", w: "內耗嚴重，你的腦袋現在比剛洗好還沒脫水的衣服還亂。", s: "因為心情不好就效率歸零，這不是感性，這叫『還沒社會化』。", l: "你又在腦補這封訊息為什麼少了一個表情符號？人家只是手累，別再演戲了。", d: "去做點體力活，出點汗把腦袋裡的那些無聊感性全部排出來。" }
+        ]
+    },
+    wind: {
+        title: "雲間神社", 
+        color: "#99ffcc", 
+        items: [
+            { type: "good", w: "變化即是轉機，保持頭腦靈活。", s: "社交運強，適合討論問題或組隊。", l: "幽默感爆表，聊天氣氛非常愉快。", d: "網路不穩警報，重要資料記得存檔。" },
+            { type: "good", w: "腦袋很好用，但你要記得用在正事。", s: "今天聊天很順，你很會講幹話。", l: "互動不錯，但你別亂講話就好。", d: "多嘗試，你亂玩有時候反而會成功。" },
+            { type: "good", w: "點子很多，至少有一個有用。", s: "今天靈活應對，還真的過關。", l: "氣氛輕鬆，適合拉近距離。", d: "想到就去試，不然你會忘記。" },
+            { type: "bad", w: "想很多，但一個都沒做。", s: "分心到不行，你連自己在幹嘛都不知道。", l: "講話踩雷，氣氛直接冷掉。", d: "閉嘴一下會救你一命。" },
+            { type: "bad", w: "腦袋很忙，但沒有產值。", s: "滑手機>做正事，今天標準流程。", l: "亂講話，然後開始後悔。", d: "先專心一件事，不然你整天白過。" },
+            { type: "good", w: "今天腦袋轉速 200%，可惜大部分用來想晚餐吃什麼。", s: "溝通鬼才，你竟然說服了那個最難搞的人。", l: "幽默感在線，你是朋友圈裡的快樂泉源。", d: "趁點子還沒飛走前趕快紀錄下來，你的記憶力只有 3 秒。" },
+            { type: "good", w: "變化萬千，沒人猜得到你下一步要幹嘛，包括你自己。", s: "多工處理能力全開，同時分心五件事還能做完一件。", l: "曖昧高手，今天的你連路過的風都能撩一下。", d: "保持你的好奇心，今天會有意想不到的好消息。" },
+            { type: "bad", w: "你這不是風，是亂流，轉得大家頭好暈。", s: "說得天花亂墜，一查進度發現全是 0。", l: "承諾像風一樣吹過就沒了，小心被貼上渣男/渣女標籤。", d: "把手機放下，你現在的資訊焦慮已經超標了。" },
+            { type: "bad", w: "分心大師，你剛才在想什麼？算了，你現在也忘了。", s: "你的專注力比衛生紙還薄，一戳就破。", l: "講話太快沒經過大腦，恭喜你成功惹火了對方。", d: "選一件事，只做那一件事，直到做完為止。" },
+            { type: "good", w: "點子很多，萬幸是有一個真的能用，不是在胡說八道。", s: "靠著嘴砲混過了一整天，沒人發現你其實什麼都沒做。", l: "今天很會撩，但別把曖昧當職業。小心備胎太多會爆胎。", d: "把話紀錄下來，因為你的記憶力只有 3 秒，明天就忘了。" },
+            { type: "good", w: "腦袋轉得快，可惜目的地不明。但至少路途很精采。", s: "同時分心五件事，最後僥倖做完半件。算你運氣好。", l: "幽默感在線，你是朋友圈裡的快樂泉源（雖然大家在笑你）。", d: "趁點子還沒飛走前趕快紀錄，別相信你的大腦。" },
+            { type: "bad", w: "想得比誰都多，做的比誰都少。這就是你的現狀。", s: "分心大師。滑手機的姿勢比做事帥多了，這就是你的產值。", l: "講話太快、腦袋太空。惹火了人還裝無辜，你是真的天真嗎？", d: "選一件事，只做那一件事，直到你這顆過動的大腦停下來。" },
+            { type: "bad", w: "承諾像風，吹過就沒。你以為你是流雲，其實你是廢氣。", s: "裝忙的最高境界：看起來很累，實際上一事無成。", l: "忽冷忽熱只是因為你沒新鮮感了。別裝深沉，你只是愛玩。", d: "放下手機，關掉社群軟體。你的焦慮來自於你太閒了。" },
+            { type: "good", w: "思維跳躍度極高，適合解決那些需要大量創意的事。", s: "溝通鬼才，你今天講的冷笑話竟然奇蹟似地都有人笑。", l: "很有話題性，但聊得太快對方跟不上，會以為你在講外星語。", d: "把點子記下來，因為你的記憶力比魚還短，明天準會忘個精光。" },
+            { type: "bad", w: "想法很多，但沒有一個能撐過三分鐘熱度的考驗。", s: "分心大師，開了二十個分頁但沒有一個頁面是跟工作有關的。", l: "忽冷忽熱的性格會讓人想遠離，別以為這是神祕感，這是『難搞』。", d: "放下手機，關掉所有通知，現在開始專心做完一件事就好。" }
+        ]
+    }
+};
+        // --- 3. 神社邏輯 ---
+        function openShrine(el, color) {
+            currentElement = el; themeColor = color;
+            document.documentElement.style.setProperty('--theme-color', color);
+            document.getElementById('entry-system').style.display = 'none';
+            document.getElementById('shrine-system').style.display = 'flex';
+            document.getElementById('shrine-title').innerText = pools[el].title;
+        }
+
+        function draw() {
+            const btn = document.getElementById('draw-btn');
+            const display = document.getElementById('display-area');
+            btn.disabled = true;
+            display.innerHTML = `<div class="shrine-box-vis shaking"></div>`;
+            for(let i=0; i<20; i++) particles.push(new Particle(window.innerWidth/2, window.innerHeight/2, true));
+
+            setTimeout(() => {
+                // 等級隨機 (大吉~大兇)
+                const isSpecial = Math.random() < 0.05;
+                const levels = ["大吉", "吉", "小吉", "末吉", "小兇", "兇", "大兇"];
+                const lvl = isSpecial ? (Math.random() > 0.5 ? "極大吉" : "極大兇") : levels[Math.floor(Math.random() * levels.length)];
+                
+                // 根據等級正負向過濾 pool
+                const isGood = !lvl.includes("兇");
+                const filtered = pools[currentElement].items.filter(i => i.type === (isGood ? "good" : "bad"));
+                const data = filtered[Math.floor(Math.random() * filtered.length)];
+
+                // 根據等級調整標題顏色與建議名稱
+                const lvlColor = isGood ? "var(--theme-color)" : "#ff6b6b";
+                const labelD = isGood ? "策略" : "避邪";
+                const labelS = isGood ? "日常" : "守成";
+
+// 5. 渲染 HTML
+       let html = "";
+        if(lvl.includes("極")) {
+            html = `
+                <div class="result-box" style="text-align:center;">
+                    <span class="result-title" style="color:${lvlColor}; text-shadow: 0 0 20px ${lvlColor};">【${lvl}】</span>
+                    <p style="color:#fff; margin-bottom: 10px;">宇宙能量產生劇烈波動！<br>請贊助作者 200 NTD 以平衡因果。</p>
+                    <b style="color:${lvlColor}; font-size:0.9rem;">(822) 中國信託<br>帳號：99821-XXXXX</b>
+                    
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed rgba(255,255,255,0.2);">
+                        <p style="font-size: 0.8rem; color: #aaa; line-height: 1.4;">
+                            ＊以上純屬玩笑，請勿當真＊<br>
+                            抽中此籤機率僅 <b style="color:#fff;">5%</b>，代表你今天的運氣<br>
+                            要麼極致強大，要麼極致混亂！<br>
+                            <span style="color:var(--theme-color); font-weight:bold; font-size:1rem;">⚡ 觸發極限回饋：獎勵你再來一籤！</span>
+                        </p>
+                    </div>
+                </div>`;
+        } else {
+            html = `
+                <div class="result-box">
+                    <span class="result-title" style="color:${lvlColor}">【${lvl}】</span>
+                    <div class="item"><b>願望</b> ${data.w}</div>
+                    <div class="item"><b>${labelS}</b> ${data.s}</div>
+                    <div class="item"><b>愛情</b> ${data.l}</div>
+                    <div class="item" style="background:rgba(255,255,255,0.05); padding:12px; border-radius:10px;">
+                        <b style="color:${lvlColor}">${labelD}</b> ${data.d}
+                    </div>
+                </div>`;
+        }
+
+        display.innerHTML = html;
+        btn.disabled = false; 
+        
+        // 如果是極限籤，按鈕文字變得更誘人
+        if(lvl.includes("極")) {
+            btn.innerText = "領取獎勵：再求一籤";
+            btn.style.boxShadow = `0 0 20px ${lvlColor}`; // 讓按鈕發光
+        } else {
+            btn.innerText = "再求一籤";
+            btn.style.boxShadow = "none";
+        }
+        
+        ripples.push(new Ripple(window.innerWidth/2, window.innerHeight/2));
+
+        // 6. 更新介面與恢復狀態
+        display.innerHTML = html;
+        btn.disabled = false; 
+        btn.innerText = "再求一籤";
+        ripples.push(new Ripple(window.innerWidth/2, window.innerHeight/2));
+        
+    }, 1200);
+}
+    </script>
+</body>
+</html>
