@@ -517,10 +517,10 @@
 
             setTimeout(() => {
                 const isSpecial = Math.random() < 0.05;
-                const levels = ["大吉", "吉", "小吉", "末吉", "小兇", "兇", "大兇"];
-                const lvl = isSpecial ? (Math.random() > 0.5 ? "極大吉" : "極大兇") : levels[Math.floor(Math.random() * levels.length)];
+                const levels = ["大吉", "吉", "小吉", "末吉", "小凶", "凶", "大凶"];
+                const lvl = isSpecial ? (Math.random() > 0.5 ? "極大吉" : "極大凶") : levels[Math.floor(Math.random() * levels.length)];
                 
-                const isGood = !lvl.includes("兇");
+                const isGood = !lvl.includes("凶");
                 const filtered = pools[currentElement].items.filter(i => i.type === (isGood ? "good" : "bad"));
                 const data = filtered[Math.floor(Math.random() * filtered.length)];
 
