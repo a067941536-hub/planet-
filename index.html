@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2MT0Z9DSYC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2MT0Z9DSYC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-2MT0Z9DSYC');
+    </script>
 
-  gtag('config', 'G-2MT0Z9DSYC');
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>星球探索 - 互動特效版</title>
@@ -22,20 +21,43 @@
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* 確保特效不會擋住選單與按鈕的點擊 */
-            z-index: 9999; /* 讓粒子顯示在最上層 */
+            pointer-events: none;
+            z-index: 9999;
         }
         
-        /* 調整游標樣式（選用） */
         body {
             cursor: crosshair;
             background-color: #0a0515;
+            margin: 0;
         }
 
-        /* 確保內容區域有相對定位，以便與畫布層疊 */
         .wrapper {
             position: relative;
             z-index: 1;
+        }
+
+        /* 修正：確保導覽點在最上層，不會被下方的 <a> 攔截 */
+        .slider-container {
+            position: relative;
+        }
+
+        .slider-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100; /* 提高層級 */
+        }
+
+        .dot {
+            cursor: pointer;
+        }
+
+        /* 確保幻燈片內的連結不會覆蓋整個 nav 區域 */
+        .slide {
+            position: relative;
         }
     </style>
 </head>
@@ -68,7 +90,7 @@
                     </div>
                 </div>
 
-               <div class="slider-container">
+                <div class="slider-container">
                     <div class="slider" id="main-slider">
                          <div class="slide">
                             <img id="nasa-img" src="https://via.placeholder.com/1000x500/0a0515/ffffff?text=Loading+Universe..." alt="每日太空照片">
@@ -80,20 +102,22 @@
                              <div class="slide-text">今日運勢：點擊查看</div>
                         </div>
                         <div class="slide">
-                            <img src="https://via.placeholder.com/1000x500/0b3d91/ffffff?text=Slide+2" alt="看板2">
+                            <a href="SEplanets.html" class="slide-link"></a>
+                            <img src="images/The sun.png" alt="看板2">
                             <div class="slide-text">探索太陽系秘辛</div>
                         </div>
                         <div class="slide">
-                            <img src="https://via.placeholder.com/1000x500/333333/ffffff?text=Slide+3" alt="看板3">
+                            <a href="SEfortune.html" class="slide-link"></a>
+                            <img src="images/The Torii.png"看板3">
                             <div class="slide-text">更多神秘宇宙訊息</div>
                         </div>
                     </div>
 
                     <div class="slider-nav">
-                        <div class="dot active" onclick="goToSlide(0)"></div>
-                        <div class="dot" onclick="goToSlide(1)"></div>
-                        <div class="dot" onclick="goToSlide(2)"></div>
-                        <div class="dot" onclick="goToSlide(3)"></div>
+                        <div class="dot active" onclick="goToSlide(0, event)"></div>
+                        <div class="dot" onclick="goToSlide(1, event)"></div>
+                        <div class="dot" onclick="goToSlide(2, event)"></div>
+                        <div class="dot" onclick="goToSlide(3, event)"></div>
                     </div>
                 </div>
 
@@ -223,7 +247,7 @@
         animate();
 
         // ==========================================
-        // --- 特效 PART 2: 原有的輪播與 NASA 邏輯 ---
+        // --- 特效 PART 2: 修改後的輪播邏輯 ---
         // ==========================================
         const slider = document.getElementById('main-slider');
         const dots = document.querySelectorAll('.dot');
@@ -234,11 +258,19 @@
             dots[index].classList.add('active');
         }
 
-        function goToSlide(index) {
+        // 修正：增加 event 參數並阻止冒泡
+        function goToSlide(index, event) {
+            if (event) {
+                event.stopPropagation(); // 阻止點擊傳透到下層的 <a>
+            }
             currentIndex = index;
-            const width = slider.clientWidth;
-            slider.scrollTo({ left: width * index, behavior: 'smooth' });
+            const slideWidth = slider.clientWidth;
+            slider.scrollTo({ left: slideWidth * index, behavior: 'smooth' });
             updateDots(index);
+
+            // 重置自動播放計時器
+            clearInterval(timer);
+            timer = setInterval(autoPlay, 5000);
         }
 
         function autoPlay() {
